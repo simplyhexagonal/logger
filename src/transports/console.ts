@@ -2,49 +2,130 @@
 import {
   yellow,
   green,
-  black,
   red,
   bgRed,
-  bgYellow,
   lightCyan,
+  lightMagenta,
   parse,
 } from 'ansicolor';
 
-import { TransportOptions } from '../interfaces';
+import { LoggerTransportResult, LoggerTransportOptions, LogLevels } from '../interfaces';
 import { LoggerTransport } from './base';
 
 export default class ConsoleTransport extends LoggerTransport {
-  constructor(options: TransportOptions['options']) {
+  readonly destination: string;
+
+  constructor(options: LoggerTransportOptions['options']) {
     const r = Math.random().toString(36).substring(7);
-    super(r, options);
+    super({...options, r});
+
+    this.destination = options.destination;
 
     if (r !== this._r) {
       return this;
     }
   }
 
-  debug(message: unknown[]): void {
-    console.log(...this.recolor(yellow(this.format(['🐞️', ...message]))));
+  async debug([timestamp, ...message]: unknown[]) {
+    console.log(...this.recolor(lightMagenta(this.format(
+      [
+        timestamp,
+        LogLevels.DEBUG.toUpperCase(),
+        '🐞️:\n\n',
+        ...message,
+        '\n',
+      ]
+    ).replace(/\n/g, '\n\t'))));
+    return {
+      destination: this.destination,
+      channelName: this.channelName,
+      result: true,
+    };
   }
 
-  info(message: unknown[]): void {
-    console.log(...this.recolor(green(this.format(['✅️', ...message]))));
+  async info([timestamp, ...message]: unknown[]) {
+    console.log(...this.recolor(green(this.format(
+      [
+        timestamp,
+        LogLevels.INFO.toUpperCase(),
+        '✅️:\n\n',
+        ...message,
+        '\n',
+      ]
+    ).replace(/\n/g, '\n\t'))));
+    return {
+      destination: this.destination,
+      channelName: this.channelName,
+      result: true,
+    };
   }
 
-  warn(message: unknown[]): void {
-    console.log(...this.recolor(bgYellow(black(this.format(['🟡', ...message])))));
+  async warn([timestamp, ...message]: unknown[]) {
+    console.log(...this.recolor(yellow(this.format(
+      [
+        timestamp,
+        LogLevels.WARN.toUpperCase(),
+        '🟡:\n\n',
+        ...message,
+        '\n',
+      ]
+    ).replace(/\n/g, '\n\t'))));
+    return {
+      destination: this.destination,
+      channelName: this.channelName,
+      result: true,
+    };
   }
 
-  error(message: unknown[]): void {
-    console.log(...this.recolor(red(this.format(['🚨️', ...message]))));
+  async error([timestamp, ...message]: unknown[]) {
+    console.log(...this.recolor(red(this.format(
+      [
+        timestamp,
+        LogLevels.ERROR.toUpperCase(),
+        '🚨️:\n\n',
+        ...message,
+        '\n',
+      ]
+    ).replace(/\n/g, '\n\t'))));
+    return {
+      destination: this.destination,
+      channelName: this.channelName,
+      result: true,
+    };
   }
 
-  fatal(message: unknown[]): void {
-    console.log(...this.recolor(bgRed(this.format(['💀', ...message]))));
+  async fatal([timestamp, ...message]: unknown[]) {
+    console.log(...this.recolor(bgRed(this.format(
+      [
+        timestamp,
+        LogLevels.FATAL.toUpperCase(),
+        '💀:\n\n',
+        ...message,
+        '\n',
+      ]
+    ).replace(/\n/g, '\n\t'))));
+    return {
+      destination: this.destination,
+      channelName: this.channelName,
+      result: true,
+    };
   }
 
-  all(message: unknown[]): void {
-    console.log(...this.recolor(lightCyan(this.format(['📝', ...message]))));
+  async all([timestamp, ...message]: unknown[]) {
+    console.log(...this.recolor(lightCyan(this.format(
+      [
+        timestamp,
+        LogLevels.ALL.toUpperCase(),
+        '📝:\n\n',
+        ...message,
+        '\n',
+      ]
+    ).replace(/\n/g, '\n\t'))));
+    return {
+      destination: this.destination,
+      channelName: this.channelName,
+      result: true,
+    };
   }
 
   recolor(formattedMessage: string) {

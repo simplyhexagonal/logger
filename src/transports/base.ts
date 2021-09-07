@@ -1,7 +1,7 @@
 import { serializeError } from 'serialize-error';
 import XXH from 'xxhashjs';
 
-import { ILoggerTransport, TransportOptions } from '../interfaces';
+import { ILoggerTransport, LoggerTransportOptions } from '../interfaces';
 
 const stringify = (obj: unknown): string => {
   let cache: unknown[] = [];
@@ -37,27 +37,30 @@ export class LoggerTransport implements ILoggerTransport {
 
   readonly _isBrowser: boolean | '' | undefined;
 
+  readonly channelName: string;
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  debug(_message: unknown[]): void {}
+  async debug(..._message: unknown[]) { return {}; }
 
-  info(_message: unknown[]): void {}
+  async info(..._message: unknown[]) { return {}; }
 
-  warn(_message: unknown[]): void {}
+  async warn(..._message: unknown[]) { return {}; }
 
-  error(_message: unknown[]): void {}
+  async error(..._message: unknown[]) { return {}; }
 
-  fatal(_message: unknown[]): void {}
+  async fatal(..._message: unknown[]) { return {}; }
 
-  all(_message: unknown[]): void {}
+  async all(..._message: unknown[]) { return {}; }
 
   format(message: unknown[]): string {
-    return message.map(stringify).join(' ');
+    return message.map(stringify).join(' ').replace(/\n (\S)/g, '\n$1');
   }
 
-  constructor(r: string, { destination }: TransportOptions['options']) {
+  constructor({ r, destination, channelName }: (LoggerTransportOptions['options'] & {r?: string})) {
     this._id = XXH.h32(destination, 0xabcd).toString(16);
-    this._r = r;
+    this._r = r as string;
     this._isBrowser = process.env.IS_BROWSER && process.env.IS_BROWSER === 'TRUE';
+    this.channelName = channelName || '-';
 
     if (LoggerTransport.instances[this._id]) {
       return LoggerTransport.instances[this._id];

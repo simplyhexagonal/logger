@@ -7,6 +7,8 @@ export enum LogLevels {
   ALL = 'all',
 }
 
+// These are our MVP but should be extended to be kept up to date as we officially
+// adopt more transports from the Open Source community
 export enum LoggerTransportName {
   CONSOLE = 'console',
   SLACK = 'slack',
@@ -16,24 +18,56 @@ export enum LoggerTransportName {
   SOCKET = 'socket',
 }
 
-export type ILoggerTransport = {
-  [k in LogLevels]: (message: unknown[]) => void;
-};
+export type LoggerTransportResult = {
+  destination?: string,
+  channelName?: string,
+  result?: unknown; // Better to leave this one up to our transport contributors
+}
+
+export type LoggerTransportFns = {
+  [LogLevels.DEBUG]: (...message: unknown[]) => Promise<LoggerTransportResult>;
+  [LogLevels.INFO]: (...message: unknown[]) => Promise<LoggerTransportResult>;
+  [LogLevels.WARN]: (...message: unknown[]) => Promise<LoggerTransportResult>;
+  [LogLevels.ERROR]: (...message: unknown[]) => Promise<LoggerTransportResult>;
+  [LogLevels.FATAL]: (...message: unknown[]) => Promise<LoggerTransportResult>;
+  [LogLevels.ALL]: (...message: unknown[]) => Promise<LoggerTransportResult>;
+}
+
+export interface ILoggerTransport extends LoggerTransportFns {
+  readonly _id: string;
+  readonly _r: string;
+  readonly _isBrowser: boolean | '' | undefined;
+  readonly channelName: string;
+}
+
+export type LoggerBroadcastFns = {
+  [LogLevels.DEBUG]: (...message: unknown[]) => Promise<LoggerTransportResult[]>;
+  [LogLevels.INFO]: (...message: unknown[]) => Promise<LoggerTransportResult[]>;
+  [LogLevels.WARN]: (...message: unknown[]) => Promise<LoggerTransportResult[]>;
+  [LogLevels.ERROR]: (...message: unknown[]) => Promise<LoggerTransportResult[]>;
+  [LogLevels.FATAL]: (...message: unknown[]) => Promise<LoggerTransportResult[]>;
+  [LogLevels.ALL]: (...message: unknown[]) => Promise<LoggerTransportResult[]>;
+}
 
 export type TransportInstances = {
   [k in LogLevels]: ILoggerTransport[];
-};
+}
 
-export interface TransportOptions<T extends { destination: string } = { destination: string }> {
-  transport: LoggerTransportName;
+export interface LoggerTransportOptions<
+  T extends {
+    destination: string,
+    channelName?: string,
+    name?: string;
+  } = {
+    destination: string,
+    channelName?: string,
+    name?: string;
+  }
+> {
+  transport: LoggerTransportName | string;
   options: T;
 }
 
-export type TransportOptionsByLevel = {
-  [k in LogLevels]: TransportOptions[];
-};
-
-export interface LoggerOptions {
-  optionsByLevel?: TransportOptionsByLevel;
-  singleton?: boolean;
+export type LoggerTransportOptionsByLevel = {
+  [k in LogLevels]: LoggerTransportOptions[];
 }
