@@ -1,6 +1,5 @@
 // @ts-ignore
-export { version } from '../package.json';
-export * from './interfaces';
+import { version } from '../package.json';
 
 import {
   LoggerTransportName,
@@ -15,6 +14,8 @@ import {
 import {LoggerTransport} from './transports/base';
 import ConsoleTransport from './transports/console';
 import UndefinedTransport from './transports/undefined';
+
+export * from './interfaces';
 
 export interface LoggerTransportClasses {
   [LoggerTransportName.CONSOLE]: typeof LoggerTransport;
@@ -85,6 +86,7 @@ const defaultTransports = {
  * and aggregating the results from said broadcasts.
  */
 export default class Logger {
+  private static version: string = version;
   private static instance: Logger;
 
   optionsByLevel: LoggerTransportOptionsByLevel;
