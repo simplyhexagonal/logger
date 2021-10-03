@@ -8,6 +8,7 @@ specifiers:
   auto-changelog: ^2.3.0
   esbuild: ^0.12.25
   jest: ^27.1.0
+  refup: ^1.1.0
   release-it: ^14.11.5
   scripty: ^2.0.0
   serialize-error: ^8.1.0
@@ -19,6 +20,7 @@ specifiers:
 
 dependencies:
   ansicolor: 1.1.95
+  refup: 1.1.0
   serialize-error: 8.1.0
   xxhashjs: 0.2.2
 
@@ -3389,6 +3391,11 @@ packages:
     dependencies:
       resolve: 1.20.0
     dev: true
+
+  /refup/1.1.0:
+    resolution: {integrity: sha512-AShxMh7ydlgU/0V0z7/+gSmE3bD85LUlBVH4ZsU8KzfCXKFA4pNtuSB3IshxjNZUwJ12OzE2mG5M4cdGmM6n4A==}
+    hasBin: true
+    dev: false
 
   /registry-auth-token/4.2.1:
     resolution: {integrity: sha512-6gkSb4U6aWJB4SF2ZvLb76yCBjcvufXBqvvEx1HbmKPkutswjW1xNVRY0+daljIYRbogN7O0etYSlbiaEQyMyw==}
