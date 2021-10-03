@@ -1,5 +1,6 @@
 // @ts-ignore
 export { version } from '../package.json';
+export * from './interfaces';
 
 import {
   LoggerTransportName,

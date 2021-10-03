@@ -1,4 +1,6 @@
 # Simply Hexagonal Logger
+![Tests](https://github.com/simplyhexagonal/logger/workflows/tests/badge.svg)
+[![Try logger on RunKit](https://badge.runkitcdn.com/@simplyhexagonal/logger.svg)](https://npm.runkit.com/@simplyhexagonal/logger)
 
 Extensible asynchronous debug logger with singleton capabilities, developed to easily broadcast to
 multiple communication channels/transports.
