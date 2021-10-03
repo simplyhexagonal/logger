@@ -1,7 +1,7 @@
 {
   "name": "@simplyhexagonal/logger",
   "version": "1.0.0",
-  "description": "Debug logger, extensible and with singleton capabilities, made to easily broadcast to multiple communication channels/transports",
+  "description": "Extensible debug logger with singleton capabilities, made to easily broadcast to multiple communication channels/transports",
   "repository": "https://github.com/simplyhexagonal/logger",
   "license": "Apache-2.0",
   "main": "dist/logger.js",
@@ -21,8 +21,6 @@
     "dev": "scripty",
     "build": "scripty",
     "test": "scripty",
-    "test:coverage": "scripty",
-    "lint": "scripty",
     "start": "echo All ok, nothing to start..."
   },
   "devDependencies": {

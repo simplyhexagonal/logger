@@ -1,3 +1,5 @@
+export { version } from '../package.json';
+
 import {
   LoggerTransportName,
   LogLevels,
