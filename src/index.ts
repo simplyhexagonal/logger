@@ -116,8 +116,6 @@ export default class Logger {
 
     if (singleton && !Logger.instance) Logger.instance = this;
 
-    this.broadcast = this.broadcast.bind(this);
-
     if (this.catchTransportErrors) {
       if (fallbackTransport) {
         this.fallbackTransport = new fallbackTransport({
