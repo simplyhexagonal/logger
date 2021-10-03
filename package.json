@@ -19,10 +19,27 @@
   ],
   "scripts": {
     "dev": "scripty",
-    "build": "scripty",
     "test": "scripty",
-    "start": "echo All ok, nothing to start..."
+    "build": "scripty",
+    "release": "release-it"
   },
+  "release-it": {
+    "git": {
+      "changelog": "auto-changelog --stdout -l false -u -t ./assets/changelog-compact.hbs"
+    },
+    "hooks": {
+      "after:bump": "scripty"
+    },
+    "npm": {
+      "publish": false
+    }
+  },
+  "files": [
+    "dist",
+    "runkit.js",
+    "README.md",
+    "package.json"
+  ],
   "devDependencies": {
     "@types/jest": "^27.0.1",
     "@types/node": "^16.7.11",
