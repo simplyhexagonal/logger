@@ -1,6 +1,37 @@
 import Logger from '../src';
-import { LoggerTransportName, LoggerTransportResult, LogLevels } from '../src/interfaces';
+import {
+  LoggerTransportName,
+  LoggerTransportOptions,
+  LoggerTransportResult,
+  LogLevels,
+} from '../src/interfaces';
+import { LoggerTransport } from '../src/transports/base';
 import { errorString } from '../src/transports/undefined';
+
+class mockTransport extends LoggerTransport {
+  readonly destination: string;
+
+  constructor(options: LoggerTransportOptions['options']) {
+    const r = Math.random().toString(36).substring(7);
+    super({...options, r});
+
+    this.destination = 'mock';
+
+    if (r !== this._r) {
+      return this;
+    }
+  }
+
+  async error([timestamp, ...message]: unknown[]) {
+    console.log(timestamp, 'MOCK:', message);
+
+    return {
+      destination: this.destination,
+      channelName: this.channelName,
+      result: true,
+    };
+  }
+}
 
 describe('logger', () => {
   /** 
@@ -119,7 +150,7 @@ describe('logger', () => {
     const result = await logger.all('Hello logger', 3, 'app', { simply: 'hexagonal' });
 
     expect(result.length).toBe(1);
-    expect(result[0].channelName).toBe('-');
+    expect(result[0].channelName).toBe(LoggerTransportName.CONSOLE);
   });
 
   /**
@@ -207,6 +238,7 @@ describe('logger', () => {
     });
 
     let result = await logger.debug('Hello logger', 8, 'app', { simply: 'hexagonal' });
+    await logger.debug('Trying to teach', 2, 'tooters', {to: 'toot'});
 
     expect(result.length).toBe(1);
 
@@ -298,8 +330,7 @@ describe('logger', () => {
         {
           transport: LoggerTransportName.DISCORD,
           options: {
-            destination:
-              'https://discord.com/api/webhooks/50M37HIN9/B09U5',
+            destination: 'https://discord.com/api/webhooks/50M37HIN9/B09U5',
           },
         },
       ],
@@ -336,7 +367,7 @@ describe('logger', () => {
     let result = await logger1.info('Hello logger', 16, 'app', { simply: 'hexagonal' });
 
     expect(result.length).toBe(1);
-    expect((result[0].result as any).error).toBeDefined();
+    expect(result[0].error).toBeDefined();
 
     await logger2.info('Hello logger', 17, 'app', { simply: 'hexagonal' }).catch(
       (e) => expect(e.message).toMatch(
@@ -347,6 +378,69 @@ describe('logger', () => {
     result = await logger3.info('Hello logger', 18, 'app', { simply: 'hexagonal' });
 
     expect(result.length).toBe(1);
-    expect((result[0].result as any).error).toBeDefined();
+    expect(result[0].error).toBeDefined();
+  });
+
+  it('should be able to be configured to use a custom fallback transport', async () => {
+    const optionsByLevel1 = {
+      warn: [],
+      info: [],
+      debug: [
+        {
+          transport: LoggerTransportName.DISCORD,
+          options: {
+            destination: 'https://discord.com/api/webhooks/F411B4CK1/B09U5',
+            channelName: 'fallback1',
+          },
+        },
+      ],
+      error: [],
+      fatal: [],
+      all: [],
+    };
+
+    const optionsByLevel2 = {
+      warn: [],
+      info: [],
+      debug: [
+        {
+          transport: LoggerTransportName.DISCORD,
+          options: {
+            destination: 'https://discord.com/api/webhooks/F411B4CK2/B09U5',
+            channelName: 'fallback2',
+          },
+        },
+      ],
+      error: [],
+      fatal: [],
+      all: [],
+    };
+
+    const logger1 = new Logger({
+      logLevel: LogLevels.DEBUG,
+      optionsByLevel: optionsByLevel1,
+      singleton: false,
+      catchTransportErrors: true,
+      fallbackTransport: mockTransport,
+    });
+
+    const logger2 = new Logger({
+      logLevel: LogLevels.DEBUG,
+      optionsByLevel: optionsByLevel2,
+      singleton: false,
+      catchTransportErrors: true,
+    });
+
+    let result = await logger1.channel('fallback1').debug('Hello logger', 19, 'app', { simply: 'hexagonal' });
+
+    expect(result.length).toBe(1);
+    expect(result[0].error).toBeDefined();
+    expect((result[0] as LoggerTransportResult).destination).toBe('mock');
+
+    result = await logger2.debug('Hello logger', 20, 'app', { simply: 'hexagonal' });
+
+    expect(result.length).toBe(1);
+    expect(result[0].error).toBeDefined();
+    expect((result[0].result as any).destination).not.toBe('mock');
   });
 });

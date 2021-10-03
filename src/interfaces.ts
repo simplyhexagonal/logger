@@ -22,6 +22,7 @@ export type LoggerTransportResult = {
   destination?: string,
   channelName?: string,
   result?: unknown; // Better to leave this one up to our transport contributors
+  error?: any;
 }
 
 export type LoggerTransportFns = {

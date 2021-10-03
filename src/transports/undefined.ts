@@ -1,12 +1,44 @@
 /* eslint-disable no-console */
-import { LoggerTransportOptions } from '../interfaces';
+import {
+  yellow,
+  green,
+  red,
+  bgRed,
+  lightCyan,
+  lightMagenta,
+  parse,
+} from 'ansicolor';
+
+import { LoggerTransportOptions, LoggerTransportResult } from '../interfaces';
 import { LoggerTransport } from './base';
+
+class UndefinedTransportError extends Error {
+  transportResult: LoggerTransportResult;
+
+  constructor(message: string, transportResult: LoggerTransportResult) {
+    super(message);
+
+    this.transportResult = transportResult;
+  };
+}
 
 export const errorString = `LOGGER ERROR: transport "TRANSPORT_NAME" is NOT available, it was not defined in the logger options!`;
 
 export default class UndefinedTransport extends LoggerTransport {
-  constructor({name, destination}: LoggerTransportOptions['options']) {
-    super({destination, r: name || destination});
+  readonly transportName: undefined | string;
+  readonly destination: string;
+
+  constructor(options: LoggerTransportOptions['options']) {
+    const r = Math.random().toString(36).substring(7);
+    super({...options, r});
+
+    console.log(
+      ...this.recolor(yellow(new Date().toISOString())),
+      ...this.recolor(yellow(`WARN 🟡:\n\n\tLogger transport "${options.name}" is NOT defined!\n`)),
+    );
+
+    this.destination = options.destination;
+    this.transportName = options.name;
   }
 
   async debug(message: unknown[]) {
@@ -40,6 +72,24 @@ export default class UndefinedTransport extends LoggerTransport {
   }
 
   throwDefault() {
-    throw new Error(errorString.replace('TRANSPORT_NAME', this._r));
+    const errorMessage = errorString.replace('TRANSPORT_NAME', this.transportName || 'undefined');
+    const error = new UndefinedTransportError(
+      errorMessage,
+      {
+        destination: this.destination,
+        channelName: this.channelName,
+        error: new Error(errorMessage),
+      },
+    );
+
+    throw error;
+  }
+
+  recolor(formattedMessage: string) {
+    if (this._isBrowser) {
+      return parse(formattedMessage).asChromeConsoleLogArguments;
+    }
+
+    return [formattedMessage];
   }
 }

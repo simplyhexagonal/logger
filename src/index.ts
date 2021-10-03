@@ -37,11 +37,15 @@ export interface LoggerOptions {
   singleton?: boolean;
   logLevel?: keyof typeof LOG_LEVELS;
   catchTransportErrors?: boolean;
+  fallbackTransport?: typeof LoggerTransport;
 }
 
 const defaultLoggerTransportOptions: LoggerTransportOptions = {
   transport: LoggerTransportName.CONSOLE,
-  options: { destination: LoggerTransportName.CONSOLE },
+  options: {
+    destination: LoggerTransportName.CONSOLE,
+    channelName: LoggerTransportName.CONSOLE,
+  },
 };
 
 const defaultOptionsByLevel: LoggerTransportOptionsByLevel = {
@@ -86,7 +90,7 @@ export default class Logger {
   );
 
   catchTransportErrors: boolean = false;
-  readonly fallbackTransport: undefined | ConsoleTransport;
+  readonly fallbackTransport: undefined | LoggerTransport;
 
   constructor({
     optionsByLevel,
@@ -94,6 +98,7 @@ export default class Logger {
     singleton = true,
     logLevel,
     catchTransportErrors,
+    fallbackTransport,
   }: LoggerOptions) {
     this.optionsByLevel = { ...defaultOptionsByLevel, ...optionsByLevel };
     this.availableTransports = {...defaultTransports, ...transports};
@@ -104,15 +109,23 @@ export default class Logger {
     } = process.env;
 
     this.catchTransportErrors = (
-      LOGGER_CATCH_TRANSPORT_ERRORS === 'TRUE'
+      (LOGGER_CATCH_TRANSPORT_ERRORS || '').toLowerCase() === 'true'
     ) || catchTransportErrors || this.catchTransportErrors;
 
     if (singleton && Logger.instance) return Logger.instance;
 
     if (singleton && !Logger.instance) Logger.instance = this;
 
+    this.broadcast = this.broadcast.bind(this);
+
     if (this.catchTransportErrors) {
-      this.fallbackTransport = new ConsoleTransport({destination: 'Logger:Fallback'});
+      if (fallbackTransport) {
+        this.fallbackTransport = new fallbackTransport({
+          destination: `Logger:Fallback(${fallbackTransport.name})`
+        });
+      } else {
+        this.fallbackTransport = new ConsoleTransport({destination: 'Logger:Fallback'});
+      }
     }
 
     const envLogLevel = LOG_LEVELS[LOG_LEVEL as keyof typeof LOG_LEVELS];
@@ -124,7 +137,7 @@ export default class Logger {
      * To save on resources, register singleton transports only for the log levels
      * above or equal the configured log level
      */
-    Object.entries(LOG_LEVELS).forEach(([k, v]) => {
+    Object.entries(LOG_LEVELS).forEach(([k, v]) => {this.broadcast
       if (
         v >= (
           envLogLevel // This is our environment variable override feature
@@ -233,12 +246,16 @@ export default class Logger {
               throw e;
             };
 
-            (this.fallbackTransport as ConsoleTransport).error([new Date().toISOString(), e]);
+            const fallbackResult = (this.fallbackTransport as LoggerTransport).error(
+              [new Date().toISOString(), e]
+            ).then((r) => ({
+              ...(e.transportResult || {}),
+              ...r,
+            }));
 
-            return {
-              result: {error: e},
-            };
+            return fallbackResult;
           });
+
           results.push(result);
 
           return result;

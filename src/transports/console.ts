@@ -9,7 +9,7 @@ import {
   parse,
 } from 'ansicolor';
 
-import { LoggerTransportResult, LoggerTransportOptions, LogLevels } from '../interfaces';
+import { LoggerTransportOptions, LogLevels } from '../interfaces';
 import { LoggerTransport } from './base';
 
 export default class ConsoleTransport extends LoggerTransport {
@@ -36,6 +36,7 @@ export default class ConsoleTransport extends LoggerTransport {
         '\n',
       ]
     ).replace(/\n/g, '\n\t'))));
+
     return {
       destination: this.destination,
       channelName: this.channelName,
@@ -53,6 +54,7 @@ export default class ConsoleTransport extends LoggerTransport {
         '\n',
       ]
     ).replace(/\n/g, '\n\t'))));
+
     return {
       destination: this.destination,
       channelName: this.channelName,
@@ -70,6 +72,7 @@ export default class ConsoleTransport extends LoggerTransport {
         '\n',
       ]
     ).replace(/\n/g, '\n\t'))));
+
     return {
       destination: this.destination,
       channelName: this.channelName,
@@ -87,6 +90,7 @@ export default class ConsoleTransport extends LoggerTransport {
         '\n',
       ]
     ).replace(/\n/g, '\n\t'))));
+
     return {
       destination: this.destination,
       channelName: this.channelName,
@@ -104,6 +108,7 @@ export default class ConsoleTransport extends LoggerTransport {
         '\n',
       ]
     ).replace(/\n/g, '\n\t'))));
+
     return {
       destination: this.destination,
       channelName: this.channelName,
@@ -121,6 +126,7 @@ export default class ConsoleTransport extends LoggerTransport {
         '\n',
       ]
     ).replace(/\n/g, '\n\t'))));
+
     return {
       destination: this.destination,
       channelName: this.channelName,
