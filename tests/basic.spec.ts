@@ -8,7 +8,7 @@ import {
 import { LoggerTransport } from '../src/transports/base';
 import { errorString } from '../src/transports/undefined';
 
-class mockTransport extends LoggerTransport {
+class MockTransport extends LoggerTransport {
   readonly destination: string;
 
   constructor(options: LoggerTransportOptions['options']) {
@@ -402,7 +402,7 @@ describe('logger', () => {
       optionsByLevel: optionsByLevel,
       singleton: false,
       catchTransportErrors: true,
-      fallbackTransport: mockTransport,
+      fallbackTransport: MockTransport,
     });
 
     const logger2 = new Logger({
