@@ -23,12 +23,11 @@ class mockTransport extends LoggerTransport {
   }
 
   async error([timestamp, ...message]: unknown[]) {
-    console.log(timestamp, 'MOCK:', message);
+    console.log(timestamp, 'MOCK:', ...message);
 
     return {
       destination: this.destination,
       channelName: this.channelName,
-      result: true,
     };
   }
 }
@@ -382,32 +381,14 @@ describe('logger', () => {
   });
 
   it('should be able to be configured to use a custom fallback transport', async () => {
-    const optionsByLevel1 = {
+    const optionsByLevel = {
       warn: [],
       info: [],
       debug: [
         {
           transport: LoggerTransportName.DISCORD,
           options: {
-            destination: 'https://discord.com/api/webhooks/F411B4CK1/B09U5',
-            channelName: 'fallback1',
-          },
-        },
-      ],
-      error: [],
-      fatal: [],
-      all: [],
-    };
-
-    const optionsByLevel2 = {
-      warn: [],
-      info: [],
-      debug: [
-        {
-          transport: LoggerTransportName.DISCORD,
-          options: {
-            destination: 'https://discord.com/api/webhooks/F411B4CK2/B09U5',
-            channelName: 'fallback2',
+            destination: 'https://discord.com/api/webhooks/F411B4CK/B09U5',
           },
         },
       ],
@@ -418,7 +399,7 @@ describe('logger', () => {
 
     const logger1 = new Logger({
       logLevel: LogLevels.DEBUG,
-      optionsByLevel: optionsByLevel1,
+      optionsByLevel: optionsByLevel,
       singleton: false,
       catchTransportErrors: true,
       fallbackTransport: mockTransport,
@@ -426,12 +407,12 @@ describe('logger', () => {
 
     const logger2 = new Logger({
       logLevel: LogLevels.DEBUG,
-      optionsByLevel: optionsByLevel2,
+      optionsByLevel: optionsByLevel,
       singleton: false,
       catchTransportErrors: true,
     });
 
-    let result = await logger1.channel('fallback1').debug('Hello logger', 19, 'app', { simply: 'hexagonal' });
+    let result = await logger1.debug('Hello logger', 19, 'app', { simply: 'hexagonal' });
 
     expect(result.length).toBe(1);
     expect(result[0].error).toBeDefined();
