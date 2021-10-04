@@ -62,7 +62,6 @@ the environment you will deploy to:
 
 There are 6 log levels:
 
-
 - debug
 - info
 - warn
@@ -186,7 +185,7 @@ const optionsByLevel = {
 };
 ```
 
-Thn you would let Logger which transport to use for `LoggerTransportName.DISCORD`:
+Then you would let Logger know which transport to use for `LoggerTransportName.DISCORD`:
 
 ```ts
 const transports = {
@@ -388,7 +387,8 @@ const logger = new Logger(options);
 
 ## The `all` log level
 
-An important thing to note is that transports defined for the `all` will **always** be instantiated.
+An important thing to note is that transports defined for the `all` log level will **always**
+be instantiated.
 
 In the same way, calls to `logger.all()` will **always** log.
 
