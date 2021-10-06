@@ -1731,7 +1731,7 @@ var Logger = (() => {
   });
 
   // package.json
-  var version = "1.0.0";
+  var version = "1.0.1";
 
   // src/interfaces.ts
   var LogLevels;
