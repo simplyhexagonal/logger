@@ -1725,33 +1725,36 @@ var Logger = (() => {
   // src/index.ts
   var src_exports = {};
   __export(src_exports, {
-    LogLevels: () => LogLevels,
+    LogLevels: () => LogLevels2,
+    LogLevelsEnum: () => LogLevelsEnum,
+    LoggerTransport: () => LoggerTransport,
     LoggerTransportName: () => LoggerTransportName,
+    LoggerTransportNameEnum: () => LoggerTransportNameEnum,
     default: () => Logger
   });
 
   // package.json
-  var version = "1.0.1";
+  var version = "1.0.2";
 
   // src/interfaces.ts
-  var LogLevels;
-  (function(LogLevels2) {
-    LogLevels2["DEBUG"] = "debug";
-    LogLevels2["INFO"] = "info";
-    LogLevels2["WARN"] = "warn";
-    LogLevels2["ERROR"] = "error";
-    LogLevels2["FATAL"] = "fatal";
-    LogLevels2["ALL"] = "all";
-  })(LogLevels || (LogLevels = {}));
-  var LoggerTransportName;
-  (function(LoggerTransportName2) {
-    LoggerTransportName2["CONSOLE"] = "console";
-    LoggerTransportName2["SLACK"] = "slack";
-    LoggerTransportName2["DISCORD"] = "discord";
-    LoggerTransportName2["EMAIL"] = "email";
-    LoggerTransportName2["SMS"] = "sms";
-    LoggerTransportName2["SOCKET"] = "socket";
-  })(LoggerTransportName || (LoggerTransportName = {}));
+  var LogLevelsEnum;
+  (function(LogLevelsEnum2) {
+    LogLevelsEnum2["DEBUG"] = "debug";
+    LogLevelsEnum2["INFO"] = "info";
+    LogLevelsEnum2["WARN"] = "warn";
+    LogLevelsEnum2["ERROR"] = "error";
+    LogLevelsEnum2["FATAL"] = "fatal";
+    LogLevelsEnum2["ALL"] = "all";
+  })(LogLevelsEnum || (LogLevelsEnum = {}));
+  var LoggerTransportNameEnum;
+  (function(LoggerTransportNameEnum2) {
+    LoggerTransportNameEnum2["CONSOLE"] = "console";
+    LoggerTransportNameEnum2["SLACK"] = "slack";
+    LoggerTransportNameEnum2["DISCORD"] = "discord";
+    LoggerTransportNameEnum2["EMAIL"] = "email";
+    LoggerTransportNameEnum2["SMS"] = "sms";
+    LoggerTransportNameEnum2["SOCKET"] = "socket";
+  })(LoggerTransportNameEnum || (LoggerTransportNameEnum = {}));
 
   // node_modules/.pnpm/ansicolor@1.1.95/node_modules/ansicolor/build/ansicolor.mjs
   var import_ansicolor = __toModule(require_ansicolor());
@@ -1861,6 +1864,7 @@ var Logger = (() => {
   LoggerTransport.instances = {};
 
   // src/transports/console.ts
+  var LogLevels = __spreadValues({}, LogLevelsEnum);
   var ConsoleTransport = class extends LoggerTransport {
     constructor(options) {
       const r = Math.random().toString(36).substring(7);
@@ -2023,6 +2027,8 @@ var Logger = (() => {
   };
 
   // src/index.ts
+  var LoggerTransportName = __spreadValues({}, LoggerTransportNameEnum);
+  var LogLevels2 = __spreadValues({}, LogLevelsEnum);
   var LOG_LEVELS = {
     debug: 0,
     info: 10,
@@ -2098,7 +2104,7 @@ var Logger = (() => {
       const transportInstanceMap = {};
       Object.entries(LOG_LEVELS).forEach(([k, v]) => {
         this.broadcast;
-        if (v >= (envLogLevel || (logLevel ? LOG_LEVELS[logLevel] : LOG_LEVELS[LogLevels.DEBUG])) || k === LogLevels.ALL) {
+        if (v >= (envLogLevel || (logLevel ? LOG_LEVELS[logLevel] : LOG_LEVELS[LogLevels2.DEBUG])) || k === LogLevels2.ALL) {
           let lvlOptions = this.optionsByLevel[k];
           if (lvlOptions.length === 0) {
             lvlOptions = defaultOptionsByLevel[k];
@@ -2118,42 +2124,42 @@ var Logger = (() => {
       });
     }
     debug(...message) {
-      return this.broadcast(message, LogLevels.DEBUG);
+      return this.broadcast(message, LogLevels2.DEBUG);
     }
     info(...message) {
-      return this.broadcast(message, LogLevels.INFO);
+      return this.broadcast(message, LogLevels2.INFO);
     }
     warn(...message) {
-      return this.broadcast(message, LogLevels.WARN);
+      return this.broadcast(message, LogLevels2.WARN);
     }
     error(...message) {
-      return this.broadcast(message, LogLevels.ERROR);
+      return this.broadcast(message, LogLevels2.ERROR);
     }
     fatal(...message) {
-      return this.broadcast(message, LogLevels.FATAL);
+      return this.broadcast(message, LogLevels2.FATAL);
     }
     all(...message) {
-      return this.broadcast(message, LogLevels.ALL);
+      return this.broadcast(message, LogLevels2.ALL);
     }
     channel(channelName) {
       return {
-        [LogLevels.DEBUG]: async (...message) => {
-          return this.broadcast(message, LogLevels.DEBUG, channelName);
+        [LogLevels2.DEBUG]: async (...message) => {
+          return this.broadcast(message, LogLevels2.DEBUG, channelName);
         },
-        [LogLevels.INFO]: async (...message) => {
-          return this.broadcast(message, LogLevels.INFO, channelName);
+        [LogLevels2.INFO]: async (...message) => {
+          return this.broadcast(message, LogLevels2.INFO, channelName);
         },
-        [LogLevels.WARN]: async (...message) => {
-          return this.broadcast(message, LogLevels.WARN, channelName);
+        [LogLevels2.WARN]: async (...message) => {
+          return this.broadcast(message, LogLevels2.WARN, channelName);
         },
-        [LogLevels.ERROR]: async (...message) => {
-          return this.broadcast(message, LogLevels.ERROR, channelName);
+        [LogLevels2.ERROR]: async (...message) => {
+          return this.broadcast(message, LogLevels2.ERROR, channelName);
         },
-        [LogLevels.FATAL]: async (...message) => {
-          return this.broadcast(message, LogLevels.FATAL, channelName);
+        [LogLevels2.FATAL]: async (...message) => {
+          return this.broadcast(message, LogLevels2.FATAL, channelName);
         },
-        [LogLevels.ALL]: async (...message) => {
-          return this.broadcast(message, LogLevels.ALL, channelName);
+        [LogLevels2.ALL]: async (...message) => {
+          return this.broadcast(message, LogLevels2.ALL, channelName);
         }
       };
     }
@@ -2180,6 +2186,8 @@ var Logger = (() => {
   };
   var Logger = _Logger;
   Logger.version = version;
+  Logger.LoggerTransportName = LoggerTransportName;
+  Logger.LogLevels = LogLevels2;
   return src_exports;
 })();
 //# sourceMappingURL=logger.js.map

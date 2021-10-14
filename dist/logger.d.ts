@@ -1,6 +1,23 @@
-import { LoggerTransportName, LogLevels, TransportInstances, LoggerTransportOptionsByLevel, LoggerTransportResult, LoggerBroadcastFns } from './interfaces';
+import { LoggerTransportNameEnum, LogLevelsEnum, TransportInstances, LoggerTransportOptionsByLevel, LoggerTransportResult, LoggerBroadcastFns } from './interfaces';
 import { LoggerTransport } from './transports/base';
 export * from './interfaces';
+export { LoggerTransport } from './transports/base';
+export declare const LoggerTransportName: {
+    CONSOLE: LoggerTransportNameEnum.CONSOLE;
+    SLACK: LoggerTransportNameEnum.SLACK;
+    DISCORD: LoggerTransportNameEnum.DISCORD;
+    EMAIL: LoggerTransportNameEnum.EMAIL;
+    SMS: LoggerTransportNameEnum.SMS;
+    SOCKET: LoggerTransportNameEnum.SOCKET;
+};
+export declare const LogLevels: {
+    DEBUG: LogLevelsEnum.DEBUG;
+    INFO: LogLevelsEnum.INFO;
+    WARN: LogLevelsEnum.WARN;
+    ERROR: LogLevelsEnum.ERROR;
+    FATAL: LogLevelsEnum.FATAL;
+    ALL: LogLevelsEnum.ALL;
+};
 export interface LoggerTransportClasses {
     [LoggerTransportName.CONSOLE]: typeof LoggerTransport;
     [LoggerTransportName.SLACK]?: typeof LoggerTransport;
@@ -32,8 +49,24 @@ export interface LoggerOptions {
  * and aggregating the results from said broadcasts.
  */
 export default class Logger {
-    private static version;
     private static instance;
+    static version: string;
+    static LoggerTransportName: {
+        CONSOLE: LoggerTransportNameEnum.CONSOLE;
+        SLACK: LoggerTransportNameEnum.SLACK;
+        DISCORD: LoggerTransportNameEnum.DISCORD;
+        EMAIL: LoggerTransportNameEnum.EMAIL;
+        SMS: LoggerTransportNameEnum.SMS;
+        SOCKET: LoggerTransportNameEnum.SOCKET;
+    };
+    static LogLevels: {
+        DEBUG: LogLevelsEnum.DEBUG;
+        INFO: LogLevelsEnum.INFO;
+        WARN: LogLevelsEnum.WARN;
+        ERROR: LogLevelsEnum.ERROR;
+        FATAL: LogLevelsEnum.FATAL;
+        ALL: LogLevelsEnum.ALL;
+    };
     optionsByLevel: LoggerTransportOptionsByLevel;
     availableTransports: LoggerTransportClasses;
     transportInstances: TransportInstances;
@@ -47,5 +80,5 @@ export default class Logger {
     fatal(...message: unknown[]): Promise<LoggerTransportResult[]>;
     all(...message: unknown[]): Promise<LoggerTransportResult[]>;
     channel(channelName: string): LoggerBroadcastFns;
-    broadcast(message: unknown[], level: LogLevels, channelName?: string): Promise<LoggerTransportResult[]>;
+    broadcast(message: unknown[], level: LogLevelsEnum, channelName?: string): Promise<LoggerTransportResult[]>;
 }
