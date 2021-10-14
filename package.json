@@ -1,6 +1,6 @@
 {
   "name": "@simplyhexagonal/logger",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Extensible debug logger with singleton capabilities, made to easily broadcast to multiple communication channels/transports",
   "repository": "https://github.com/simplyhexagonal/logger",
   "license": "Apache-2.0",
