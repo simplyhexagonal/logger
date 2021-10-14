@@ -2,8 +2,8 @@
 import { version } from '../package.json';
 
 import {
-  LoggerTransportName,
-  LogLevels,
+  LoggerTransportNameEnum,
+  LogLevelsEnum,
   TransportInstances,
   LoggerTransportOptions,
   LoggerTransportOptionsByLevel,
@@ -11,11 +11,16 @@ import {
   LoggerBroadcastFns,
 } from './interfaces';
 
-import {LoggerTransport} from './transports/base';
+import { LoggerTransport } from './transports/base';
 import ConsoleTransport from './transports/console';
 import UndefinedTransport from './transports/undefined';
 
 export * from './interfaces';
+
+export { LoggerTransport } from './transports/base';
+
+export const LoggerTransportName = {...LoggerTransportNameEnum};
+export const LogLevels = {...LogLevelsEnum};
 
 export interface LoggerTransportClasses {
   [LoggerTransportName.CONSOLE]: typeof LoggerTransport;
@@ -86,8 +91,11 @@ const defaultTransports = {
  * and aggregating the results from said broadcasts.
  */
 export default class Logger {
-  private static version: string = version;
   private static instance: Logger;
+
+  static version: string = version;
+  static LoggerTransportName = LoggerTransportName;
+  static LogLevels = LogLevels;
 
   optionsByLevel: LoggerTransportOptionsByLevel;
   availableTransports: LoggerTransportClasses;
@@ -164,7 +172,7 @@ export default class Logger {
 
         lvlOptions.forEach(({transport, options}) => {
           const {destination} = options;
-          const TransportClass = this.availableTransports[transport as LoggerTransportName]
+          const TransportClass = this.availableTransports[transport as LoggerTransportNameEnum]
               || UndefinedTransport;
 
           if (!destinations.includes(destination)) {
@@ -233,7 +241,7 @@ export default class Logger {
 
   async broadcast(
     message: unknown[],
-    level: LogLevels,
+    level: LogLevelsEnum,
     channelName: string = '-',
   ): Promise<LoggerTransportResult[]> {
     const results: Promise<LoggerTransportResult>[] = [];
@@ -243,7 +251,7 @@ export default class Logger {
         await a;
 
         if (channelName === '-' || transport.channelName === channelName) {
-          const result = transport[level as LogLevels](
+          const result = transport[level as LogLevelsEnum](
             [new Date().toISOString(), ...message]
           ).catch((e) => {
             if (!this.catchTransportErrors) {

@@ -9,8 +9,10 @@ import {
   parse,
 } from 'ansicolor';
 
-import { LoggerTransportOptions, LogLevels } from '../interfaces';
+import { LoggerTransportOptions, LogLevelsEnum } from '../interfaces';
 import { LoggerTransport } from './base';
+
+const LogLevels = {...LogLevelsEnum};
 
 export default class ConsoleTransport extends LoggerTransport {
   readonly destination: string;

@@ -1,11 +1,6 @@
 /* eslint-disable no-console */
 import {
   yellow,
-  green,
-  red,
-  bgRed,
-  lightCyan,
-  lightMagenta,
   parse,
 } from 'ansicolor';
 

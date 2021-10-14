@@ -149,7 +149,7 @@ The debug channel has the webhook path: `/D3BU9/W3BH00K`
 
 The error channel has the webhook path: `/3RR0R/W3BH00K`
 
-Using `@simplyhexagonal/logger`, you can add the [official Discord transport]() as a dependency
+Using `@simplyhexagonal/logger`, you can add the [official Discord transport](https://www.npmjs.com/package/@simplyhexagonal/logger-transport-discord) as a dependency
 and import it:
 
 ```ts
@@ -443,6 +443,15 @@ const server = async () => {
 
 server();
 ```
+
+## Transports
+
+We have the following officially supported transports:
+
+- [Discord](https://www.npmjs.com/package/@simplyhexagonal/logger-transport-discord)
+- [Slack]() (Coming soon)
+- [Email]() (Coming soon)
+- [SMS]() (Coming soon)
 
 ## Contributing
 

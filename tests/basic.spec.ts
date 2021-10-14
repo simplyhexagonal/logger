@@ -1,11 +1,11 @@
-import Logger from '../src';
-import {
+import Logger, {
   LoggerTransportName,
   LoggerTransportOptions,
   LoggerTransportResult,
   LogLevels,
-} from '../src/interfaces';
-import { LoggerTransport } from '../src/transports/base';
+  LoggerTransport,
+} from '../src';
+
 import { errorString } from '../src/transports/undefined';
 
 class MockTransport extends LoggerTransport {

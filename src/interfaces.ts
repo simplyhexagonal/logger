@@ -1,4 +1,4 @@
-export enum LogLevels {
+export enum LogLevelsEnum {
   DEBUG = 'debug',
   INFO = 'info',
   WARN = 'warn',
@@ -9,7 +9,7 @@ export enum LogLevels {
 
 // These are our MVP but should be extended to be kept up to date as we officially
 // adopt more transports from the Open Source community
-export enum LoggerTransportName {
+export enum LoggerTransportNameEnum {
   CONSOLE = 'console',
   SLACK = 'slack',
   DISCORD = 'discord',
@@ -26,12 +26,12 @@ export type LoggerTransportResult = {
 }
 
 export type LoggerTransportFns = {
-  [LogLevels.DEBUG]: (...message: unknown[]) => Promise<LoggerTransportResult>;
-  [LogLevels.INFO]: (...message: unknown[]) => Promise<LoggerTransportResult>;
-  [LogLevels.WARN]: (...message: unknown[]) => Promise<LoggerTransportResult>;
-  [LogLevels.ERROR]: (...message: unknown[]) => Promise<LoggerTransportResult>;
-  [LogLevels.FATAL]: (...message: unknown[]) => Promise<LoggerTransportResult>;
-  [LogLevels.ALL]: (...message: unknown[]) => Promise<LoggerTransportResult>;
+  [LogLevelsEnum.DEBUG]: (...message: unknown[]) => Promise<LoggerTransportResult>;
+  [LogLevelsEnum.INFO]: (...message: unknown[]) => Promise<LoggerTransportResult>;
+  [LogLevelsEnum.WARN]: (...message: unknown[]) => Promise<LoggerTransportResult>;
+  [LogLevelsEnum.ERROR]: (...message: unknown[]) => Promise<LoggerTransportResult>;
+  [LogLevelsEnum.FATAL]: (...message: unknown[]) => Promise<LoggerTransportResult>;
+  [LogLevelsEnum.ALL]: (...message: unknown[]) => Promise<LoggerTransportResult>;
 }
 
 export interface ILoggerTransport extends LoggerTransportFns {
@@ -42,16 +42,16 @@ export interface ILoggerTransport extends LoggerTransportFns {
 }
 
 export type LoggerBroadcastFns = {
-  [LogLevels.DEBUG]: (...message: unknown[]) => Promise<LoggerTransportResult[]>;
-  [LogLevels.INFO]: (...message: unknown[]) => Promise<LoggerTransportResult[]>;
-  [LogLevels.WARN]: (...message: unknown[]) => Promise<LoggerTransportResult[]>;
-  [LogLevels.ERROR]: (...message: unknown[]) => Promise<LoggerTransportResult[]>;
-  [LogLevels.FATAL]: (...message: unknown[]) => Promise<LoggerTransportResult[]>;
-  [LogLevels.ALL]: (...message: unknown[]) => Promise<LoggerTransportResult[]>;
+  [LogLevelsEnum.DEBUG]: (...message: unknown[]) => Promise<LoggerTransportResult[]>;
+  [LogLevelsEnum.INFO]: (...message: unknown[]) => Promise<LoggerTransportResult[]>;
+  [LogLevelsEnum.WARN]: (...message: unknown[]) => Promise<LoggerTransportResult[]>;
+  [LogLevelsEnum.ERROR]: (...message: unknown[]) => Promise<LoggerTransportResult[]>;
+  [LogLevelsEnum.FATAL]: (...message: unknown[]) => Promise<LoggerTransportResult[]>;
+  [LogLevelsEnum.ALL]: (...message: unknown[]) => Promise<LoggerTransportResult[]>;
 }
 
 export type TransportInstances = {
-  [k in LogLevels]: ILoggerTransport[];
+  [k in LogLevelsEnum]: ILoggerTransport[];
 }
 
 export interface LoggerTransportOptions<
@@ -65,10 +65,10 @@ export interface LoggerTransportOptions<
     name?: string;
   }
 > {
-  transport: LoggerTransportName | string;
+  transport: LoggerTransportNameEnum | string;
   options: T;
 }
 
 export type LoggerTransportOptionsByLevel = {
-  [k in LogLevels]: LoggerTransportOptions[];
+  [k in LogLevelsEnum]: LoggerTransportOptions[];
 }
