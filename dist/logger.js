@@ -1734,7 +1734,7 @@ var Logger = (() => {
   });
 
   // package.json
-  var version = "1.1.2";
+  var version = "1.2.0";
 
   // src/interfaces.ts
   var LogLevelsEnum;
@@ -2191,15 +2191,23 @@ var Logger = (() => {
         await a;
         if (channelName === "-" || transport.channelName === channelName) {
           const result = transport[level]([
-            this.appIdString(),
-            new Date().toISOString(),
+            [
+              this.appIdString(),
+              `[${new Date().toISOString()}]`
+            ].join(" "),
             ...message
           ].filter((m) => m)).catch((e) => {
             if (!this.catchTransportErrors) {
               throw e;
             }
             ;
-            const fallbackResult = this.fallbackTransport.error([new Date().toISOString(), e]).then((r) => __spreadValues(__spreadValues({}, e.transportResult || {}), r));
+            const fallbackResult = this.fallbackTransport.error([
+              [
+                this.appIdString(),
+                `[${new Date().toISOString()}]`
+              ].join(" "),
+              e
+            ]).then((r) => __spreadValues(__spreadValues({}, e.transportResult || {}), r));
             return fallbackResult;
           });
           results.push(result);
