@@ -45,7 +45,6 @@
   "devDependencies": {
     "@types/jest": "^27.0.1",
     "@types/node": "^16.7.11",
-    "@types/xxhashjs": "^0.2.2",
     "auto-changelog": "^2.3.0",
     "esbuild": "^0.12.25",
     "jest": "^27.1.0",
@@ -58,6 +57,7 @@
     "typescript": "^4.4.2"
   },
   "dependencies": {
+    "@types/xxhashjs": "^0.2.2",
     "ansicolor": "^1.1.95",
     "serialize-error": "^8.1.0",
     "xxhashjs": "^0.2.2"
