@@ -98,6 +98,7 @@ export default class Logger {
   static version: string = version;
   static LoggerTransportName = LoggerTransportName;
   static LogLevels = LogLevels;
+  static LoggerTransport = LoggerTransport;
 
   optionsByLevel: LoggerTransportOptionsByLevel;
   availableTransports: LoggerTransportClasses;
