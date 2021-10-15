@@ -28,10 +28,10 @@ export default class ConsoleTransport extends LoggerTransport {
     }
   }
 
-  async debug([timestamp, ...message]: unknown[]) {
+  async debug([prefixes, ...message]: unknown[]) {
     console.log(...this.recolor(lightMagenta(this.format(
       [
-        timestamp,
+        prefixes,
         LogLevels.DEBUG.toUpperCase(),
         '🐞️:\n\n',
         ...message,
@@ -46,10 +46,10 @@ export default class ConsoleTransport extends LoggerTransport {
     };
   }
 
-  async info([timestamp, ...message]: unknown[]) {
+  async info([prefixes, ...message]: unknown[]) {
     console.log(...this.recolor(green(this.format(
       [
-        timestamp,
+        prefixes,
         LogLevels.INFO.toUpperCase(),
         '✅️:\n\n',
         ...message,
@@ -64,10 +64,10 @@ export default class ConsoleTransport extends LoggerTransport {
     };
   }
 
-  async warn([timestamp, ...message]: unknown[]) {
+  async warn([prefixes, ...message]: unknown[]) {
     console.log(...this.recolor(yellow(this.format(
       [
-        timestamp,
+        prefixes,
         LogLevels.WARN.toUpperCase(),
         '🟡:\n\n',
         ...message,
@@ -82,10 +82,10 @@ export default class ConsoleTransport extends LoggerTransport {
     };
   }
 
-  async error([timestamp, ...message]: unknown[]) {
+  async error([prefixes, ...message]: unknown[]) {
     console.log(...this.recolor(red(this.format(
       [
-        timestamp,
+        prefixes,
         LogLevels.ERROR.toUpperCase(),
         '🚨️:\n\n',
         ...message,
@@ -100,10 +100,10 @@ export default class ConsoleTransport extends LoggerTransport {
     };
   }
 
-  async fatal([timestamp, ...message]: unknown[]) {
+  async fatal([prefixes, ...message]: unknown[]) {
     console.log(...this.recolor(bgRed(this.format(
       [
-        timestamp,
+        prefixes,
         LogLevels.FATAL.toUpperCase(),
         '💀:\n\n',
         ...message,
@@ -118,10 +118,10 @@ export default class ConsoleTransport extends LoggerTransport {
     };
   }
 
-  async all([timestamp, ...message]: unknown[]) {
+  async all([prefixes, ...message]: unknown[]) {
     console.log(...this.recolor(lightCyan(this.format(
       [
-        timestamp,
+        prefixes,
         LogLevels.ALL.toUpperCase(),
         '📝:\n\n',
         ...message,
