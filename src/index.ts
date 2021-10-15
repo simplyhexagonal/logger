@@ -283,8 +283,10 @@ export default class Logger {
         if (channelName === '-' || transport.channelName === channelName) {
           const result = transport[level as LogLevelsEnum](
             [
-              this.appIdString(),
-              new Date().toISOString(),
+              [
+                this.appIdString(),
+                `[${new Date().toISOString()}]`,
+              ].join(' '),
               ...message,
             ].filter((m) => m)
           ).catch((e) => {
@@ -293,7 +295,13 @@ export default class Logger {
             };
 
             const fallbackResult = (this.fallbackTransport as LoggerTransport).error(
-              [new Date().toISOString(), e]
+              [
+                [
+                  this.appIdString(),
+                  `[${new Date().toISOString()}]`,
+                ].join(' '),
+                e,
+              ]
             ).then((r) => ({
               ...(e.transportResult || {}),
               ...r,
