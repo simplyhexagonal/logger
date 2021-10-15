@@ -44,7 +44,7 @@ const LOG_LEVELS = {
 
 export interface LoggerOptions {
   optionsByLevel?: LoggerTransportOptionsByLevel;
-  transports?: LoggerTransportClasses;
+  transports?: Partial<LoggerTransportClasses>;
   singleton?: boolean;
   logLevel?: keyof typeof LOG_LEVELS;
   catchTransportErrors?: boolean;
