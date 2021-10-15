@@ -375,7 +375,7 @@ const options = {
     all: [],
   },
   transports: {
-    [LoggerTransportName.DISCORD]: DiscordTransport,
+    [`${LoggerTransportName.DISCORD}`]: DiscordTransport,
   },
   singleton: true, // default
   catchTransportErrors: false, // default
