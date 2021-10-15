@@ -3,32 +3,32 @@ import { LoggerTransport } from './base';
 export default class ConsoleTransport extends LoggerTransport {
     readonly destination: string;
     constructor(options: LoggerTransportOptions['options']);
-    debug([timestamp, ...message]: unknown[]): Promise<{
+    debug([prefixes, ...message]: unknown[]): Promise<{
         destination: string;
         channelName: string;
         result: boolean;
     }>;
-    info([timestamp, ...message]: unknown[]): Promise<{
+    info([prefixes, ...message]: unknown[]): Promise<{
         destination: string;
         channelName: string;
         result: boolean;
     }>;
-    warn([timestamp, ...message]: unknown[]): Promise<{
+    warn([prefixes, ...message]: unknown[]): Promise<{
         destination: string;
         channelName: string;
         result: boolean;
     }>;
-    error([timestamp, ...message]: unknown[]): Promise<{
+    error([prefixes, ...message]: unknown[]): Promise<{
         destination: string;
         channelName: string;
         result: boolean;
     }>;
-    fatal([timestamp, ...message]: unknown[]): Promise<{
+    fatal([prefixes, ...message]: unknown[]): Promise<{
         destination: string;
         channelName: string;
         result: boolean;
     }>;
-    all([timestamp, ...message]: unknown[]): Promise<{
+    all([prefixes, ...message]: unknown[]): Promise<{
         destination: string;
         channelName: string;
         result: boolean;
