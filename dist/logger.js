@@ -43,484 +43,6 @@ var Logger = (() => {
     return __reExport(__markAsModule(__defProp(module != null ? __create(__getProtoOf(module)) : {}, "default", module && module.__esModule && "default" in module ? { get: () => module.default, enumerable: true } : { value: module, enumerable: true })), module);
   };
 
-  // node_modules/.pnpm/ansicolor@1.1.95/node_modules/ansicolor/build/ansicolor.js
-  var require_ansicolor = __commonJS({
-    "node_modules/.pnpm/ansicolor@1.1.95/node_modules/ansicolor/build/ansicolor.js"(exports, module) {
-      "use strict";
-      var _slicedToArray = function() {
-        function sliceIterator(arr, i) {
-          var _arr = [];
-          var _n = true;
-          var _d = false;
-          var _e = void 0;
-          try {
-            for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-              _arr.push(_s.value);
-              if (i && _arr.length === i)
-                break;
-            }
-          } catch (err) {
-            _d = true;
-            _e = err;
-          } finally {
-            try {
-              if (!_n && _i["return"])
-                _i["return"]();
-            } finally {
-              if (_d)
-                throw _e;
-            }
-          }
-          return _arr;
-        }
-        return function(arr, i) {
-          if (Array.isArray(arr)) {
-            return arr;
-          } else if (Symbol.iterator in Object(arr)) {
-            return sliceIterator(arr, i);
-          } else {
-            throw new TypeError("Invalid attempt to destructure non-iterable instance");
-          }
-        };
-      }();
-      var _createClass = function() {
-        function defineProperties(target, props) {
-          for (var i = 0; i < props.length; i++) {
-            var descriptor = props[i];
-            descriptor.enumerable = descriptor.enumerable || false;
-            descriptor.configurable = true;
-            if ("value" in descriptor)
-              descriptor.writable = true;
-            Object.defineProperty(target, descriptor.key, descriptor);
-          }
-        }
-        return function(Constructor, protoProps, staticProps) {
-          if (protoProps)
-            defineProperties(Constructor.prototype, protoProps);
-          if (staticProps)
-            defineProperties(Constructor, staticProps);
-          return Constructor;
-        };
-      }();
-      function _toConsumableArray(arr) {
-        if (Array.isArray(arr)) {
-          for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
-            arr2[i] = arr[i];
-          }
-          return arr2;
-        } else {
-          return Array.from(arr);
-        }
-      }
-      function _classCallCheck(instance, Constructor) {
-        if (!(instance instanceof Constructor)) {
-          throw new TypeError("Cannot call a class as a function");
-        }
-      }
-      var O = Object;
-      var colorCodes = ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "lightGray", "", "default"];
-      var colorCodesLight = ["darkGray", "lightRed", "lightGreen", "lightYellow", "lightBlue", "lightMagenta", "lightCyan", "white", ""];
-      var styleCodes = ["", "bright", "dim", "italic", "underline", "", "", "inverse"];
-      var asBright = {
-        "red": "lightRed",
-        "green": "lightGreen",
-        "yellow": "lightYellow",
-        "blue": "lightBlue",
-        "magenta": "lightMagenta",
-        "cyan": "lightCyan",
-        "black": "darkGray",
-        "lightGray": "white"
-      };
-      var types = {
-        0: "style",
-        2: "unstyle",
-        3: "color",
-        9: "colorLight",
-        4: "bgColor",
-        10: "bgColorLight"
-      };
-      var subtypes = {
-        color: colorCodes,
-        colorLight: colorCodesLight,
-        bgColor: colorCodes,
-        bgColorLight: colorCodesLight,
-        style: styleCodes,
-        unstyle: styleCodes
-      };
-      var clean = function clean2(obj) {
-        for (var k in obj) {
-          if (!obj[k]) {
-            delete obj[k];
-          }
-        }
-        return O.keys(obj).length === 0 ? void 0 : obj;
-      };
-      var Color = function() {
-        function Color2(background, name, brightness) {
-          _classCallCheck(this, Color2);
-          this.background = background;
-          this.name = name;
-          this.brightness = brightness;
-        }
-        _createClass(Color2, [{
-          key: "defaultBrightness",
-          value: function defaultBrightness(value) {
-            return new Color2(this.background, this.name, this.brightness || value);
-          }
-        }, {
-          key: "css",
-          value: function css(inverted) {
-            var color = inverted ? this.inverse : this;
-            var rgbName = color.brightness === Code.bright && asBright[color.name] || color.name;
-            var prop = color.background ? "background:" : "color:", rgb2 = Colors2.rgb[rgbName], alpha = this.brightness === Code.dim ? 0.5 : 1;
-            return rgb2 ? prop + "rgba(" + [].concat(_toConsumableArray(rgb2), [alpha]).join(",") + ");" : !color.background && alpha < 1 ? "color:rgba(0,0,0,0.5);" : "";
-          }
-        }, {
-          key: "inverse",
-          get: function get() {
-            return new Color2(!this.background, this.name || (this.background ? "black" : "white"), this.brightness);
-          }
-        }, {
-          key: "clean",
-          get: function get() {
-            return clean({
-              name: this.name === "default" ? "" : this.name,
-              bright: this.brightness === Code.bright,
-              dim: this.brightness === Code.dim
-            });
-          }
-        }]);
-        return Color2;
-      }();
-      var Code = function() {
-        function Code2(n) {
-          _classCallCheck(this, Code2);
-          if (n !== void 0) {
-            this.value = Number(n);
-          }
-        }
-        _createClass(Code2, [{
-          key: "type",
-          get: function get() {
-            return types[Math.floor(this.value / 10)];
-          }
-        }, {
-          key: "subtype",
-          get: function get() {
-            return subtypes[this.type][this.value % 10];
-          }
-        }, {
-          key: "str",
-          get: function get() {
-            return this.value ? "[" + this.value + "m" : "";
-          }
-        }, {
-          key: "isBrightness",
-          get: function get() {
-            return this.value === Code2.noBrightness || this.value === Code2.bright || this.value === Code2.dim;
-          }
-        }], [{
-          key: "str",
-          value: function str(x) {
-            return new Code2(x).str;
-          }
-        }]);
-        return Code2;
-      }();
-      O.assign(Code, {
-        reset: 0,
-        bright: 1,
-        dim: 2,
-        inverse: 7,
-        noBrightness: 22,
-        noItalic: 23,
-        noUnderline: 24,
-        noInverse: 27,
-        noColor: 39,
-        noBgColor: 49
-      });
-      var replaceAll = function replaceAll2(str, a, b) {
-        return str.split(a).join(b);
-      };
-      var denormalizeBrightness = function denormalizeBrightness2(s) {
-        return s.replace(/(\u001b\[(1|2)m)/g, "[22m$1");
-      };
-      var normalizeBrightness = function normalizeBrightness2(s) {
-        return s.replace(/\u001b\[22m(\u001b\[(1|2)m)/g, "$1");
-      };
-      var wrap = function wrap2(x, openCode, closeCode) {
-        var open = Code.str(openCode), close = Code.str(closeCode);
-        return String(x).split("\n").map(function(line) {
-          return denormalizeBrightness(open + replaceAll(normalizeBrightness(line), close, open) + close);
-        }).join("\n");
-      };
-      var camel = function camel2(a, b) {
-        return a + b.charAt(0).toUpperCase() + b.slice(1);
-      };
-      var stringWrappingMethods = function() {
-        return [].concat(_toConsumableArray(colorCodes.map(function(k, i) {
-          return !k ? [] : [
-            [k, 30 + i, Code.noColor],
-            [camel("bg", k), 40 + i, Code.noBgColor]
-          ];
-        })), _toConsumableArray(colorCodesLight.map(function(k, i) {
-          return !k ? [] : [
-            [k, 90 + i, Code.noColor],
-            [camel("bg", k), 100 + i, Code.noBgColor]
-          ];
-        })), _toConsumableArray(["", "BrightRed", "BrightGreen", "BrightYellow", "BrightBlue", "BrightMagenta", "BrightCyan"].map(function(k, i) {
-          return !k ? [] : [["bg" + k, 100 + i, Code.noBgColor]];
-        })), _toConsumableArray(styleCodes.map(function(k, i) {
-          return !k ? [] : [
-            [k, i, k === "bright" || k === "dim" ? Code.noBrightness : 20 + i]
-          ];
-        }))).reduce(function(a, b) {
-          return a.concat(b);
-        });
-      }();
-      var assignStringWrappingAPI = function assignStringWrappingAPI2(target) {
-        var wrapBefore = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : target;
-        return stringWrappingMethods.reduce(function(memo, _ref) {
-          var _ref2 = _slicedToArray(_ref, 3), k = _ref2[0], open = _ref2[1], close = _ref2[2];
-          return O.defineProperty(memo, k, {
-            get: function get() {
-              return assignStringWrappingAPI2(function(str) {
-                return wrapBefore(wrap(str, open, close));
-              });
-            }
-          });
-        }, target);
-      };
-      var TEXT = 0;
-      var BRACKET = 1;
-      var CODE = 2;
-      function rawParse(s) {
-        var state = TEXT, buffer = "", text = "", code = "", codes = [];
-        var spans = [];
-        for (var i = 0, n = s.length; i < n; i++) {
-          var c = s[i];
-          buffer += c;
-          switch (state) {
-            case TEXT:
-              if (c === "") {
-                state = BRACKET;
-                buffer = c;
-              } else {
-                text += c;
-              }
-              break;
-            case BRACKET:
-              if (c === "[") {
-                state = CODE;
-                code = "";
-                codes = [];
-              } else {
-                state = TEXT;
-                text += buffer;
-              }
-              break;
-            case CODE:
-              if (c >= "0" && c <= "9") {
-                code += c;
-              } else if (c === ";") {
-                codes.push(new Code(code));
-                code = "";
-              } else if (c === "m") {
-                code = code || "0";
-                codes.push(new Code(code));
-                var _iteratorNormalCompletion = true;
-                var _didIteratorError = false;
-                var _iteratorError = void 0;
-                try {
-                  for (var _iterator = codes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                    var _code = _step.value;
-                    spans.push({ text, code: _code });
-                    text = "";
-                  }
-                } catch (err) {
-                  _didIteratorError = true;
-                  _iteratorError = err;
-                } finally {
-                  try {
-                    if (!_iteratorNormalCompletion && _iterator.return) {
-                      _iterator.return();
-                    }
-                  } finally {
-                    if (_didIteratorError) {
-                      throw _iteratorError;
-                    }
-                  }
-                }
-                state = TEXT;
-              } else {
-                state = TEXT;
-                text += buffer;
-              }
-          }
-        }
-        if (state !== TEXT)
-          text += buffer;
-        if (text)
-          spans.push({ text, code: new Code() });
-        return spans;
-      }
-      var Colors2 = function() {
-        function Colors3(s) {
-          _classCallCheck(this, Colors3);
-          this.spans = s ? rawParse(s) : [];
-        }
-        _createClass(Colors3, [{
-          key: Symbol.iterator,
-          value: function value() {
-            return this.spans[Symbol.iterator]();
-          }
-        }, {
-          key: "str",
-          get: function get() {
-            return this.spans.reduce(function(str, p) {
-              return str + p.text + p.code.str;
-            }, "");
-          }
-        }, {
-          key: "parsed",
-          get: function get() {
-            var color = void 0, bgColor = void 0, brightness = void 0, styles = void 0;
-            function reset() {
-              color = new Color(), bgColor = new Color(true), brightness = void 0, styles = new Set();
-            }
-            reset();
-            return O.assign(new Colors3(), {
-              spans: this.spans.map(function(span) {
-                var c = span.code;
-                var inverted = styles.has("inverse"), underline2 = styles.has("underline") ? "text-decoration: underline;" : "", italic2 = styles.has("italic") ? "font-style: italic;" : "", bold = brightness === Code.bright ? "font-weight: bold;" : "";
-                var foreColor = color.defaultBrightness(brightness);
-                var styledSpan = O.assign({ css: bold + italic2 + underline2 + foreColor.css(inverted) + bgColor.css(inverted) }, clean({ bold: !!bold, color: foreColor.clean, bgColor: bgColor.clean }), span);
-                var _iteratorNormalCompletion2 = true;
-                var _didIteratorError2 = false;
-                var _iteratorError2 = void 0;
-                try {
-                  for (var _iterator2 = styles[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                    var k = _step2.value;
-                    styledSpan[k] = true;
-                  }
-                } catch (err) {
-                  _didIteratorError2 = true;
-                  _iteratorError2 = err;
-                } finally {
-                  try {
-                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                      _iterator2.return();
-                    }
-                  } finally {
-                    if (_didIteratorError2) {
-                      throw _iteratorError2;
-                    }
-                  }
-                }
-                if (c.isBrightness) {
-                  brightness = c.value;
-                } else if (span.code.value !== void 0) {
-                  if (span.code.value === Code.reset) {
-                    reset();
-                  } else {
-                    switch (span.code.type) {
-                      case "color":
-                      case "colorLight":
-                        color = new Color(false, c.subtype);
-                        break;
-                      case "bgColor":
-                      case "bgColorLight":
-                        bgColor = new Color(true, c.subtype);
-                        break;
-                      case "style":
-                        styles.add(c.subtype);
-                        break;
-                      case "unstyle":
-                        styles.delete(c.subtype);
-                        break;
-                    }
-                  }
-                }
-                return styledSpan;
-              }).filter(function(s) {
-                return s.text.length > 0;
-              })
-            });
-          }
-        }, {
-          key: "asChromeConsoleLogArguments",
-          get: function get() {
-            var spans = this.parsed.spans;
-            return [spans.map(function(s) {
-              return "%c" + s.text;
-            }).join("")].concat(_toConsumableArray(spans.map(function(s) {
-              return s.css;
-            })));
-          }
-        }, {
-          key: "browserConsoleArguments",
-          get: function get() {
-            return this.asChromeConsoleLogArguments;
-          }
-        }], [{
-          key: "parse",
-          value: function parse2(s) {
-            return new Colors3(s).parsed;
-          }
-        }, {
-          key: "strip",
-          value: function strip2(s) {
-            return s.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-PRZcf-nqry=><]/g, "");
-          }
-        }, {
-          key: "nice",
-          get: function get() {
-            Colors3.names.forEach(function(k) {
-              if (!(k in String.prototype)) {
-                O.defineProperty(String.prototype, k, { get: function get2() {
-                  return Colors3[k](this);
-                } });
-              }
-            });
-            return Colors3;
-          }
-        }, {
-          key: "ansicolor",
-          get: function get() {
-            return Colors3;
-          }
-        }]);
-        return Colors3;
-      }();
-      assignStringWrappingAPI(Colors2, function(str) {
-        return str;
-      });
-      Colors2.names = stringWrappingMethods.map(function(_ref3) {
-        var _ref4 = _slicedToArray(_ref3, 1), k = _ref4[0];
-        return k;
-      });
-      Colors2.rgb = {
-        black: [0, 0, 0],
-        darkGray: [100, 100, 100],
-        lightGray: [200, 200, 200],
-        white: [255, 255, 255],
-        red: [204, 0, 0],
-        lightRed: [255, 51, 0],
-        green: [0, 204, 0],
-        lightGreen: [51, 204, 51],
-        yellow: [204, 102, 0],
-        lightYellow: [255, 153, 51],
-        blue: [0, 0, 255],
-        lightBlue: [26, 140, 255],
-        magenta: [204, 0, 204],
-        lightMagenta: [255, 0, 255],
-        cyan: [0, 153, 255],
-        lightCyan: [0, 204, 255]
-      };
-      module.exports = Colors2;
-    }
-  });
-
   // node_modules/.pnpm/serialize-error@8.1.0/node_modules/serialize-error/index.js
   var require_serialize_error = __commonJS({
     "node_modules/.pnpm/serialize-error@8.1.0/node_modules/serialize-error/index.js"(exports, module) {
@@ -1722,6 +1244,484 @@ var Logger = (() => {
     }
   });
 
+  // node_modules/.pnpm/ansicolor@1.1.95/node_modules/ansicolor/build/ansicolor.js
+  var require_ansicolor = __commonJS({
+    "node_modules/.pnpm/ansicolor@1.1.95/node_modules/ansicolor/build/ansicolor.js"(exports, module) {
+      "use strict";
+      var _slicedToArray = function() {
+        function sliceIterator(arr, i) {
+          var _arr = [];
+          var _n = true;
+          var _d = false;
+          var _e = void 0;
+          try {
+            for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+              _arr.push(_s.value);
+              if (i && _arr.length === i)
+                break;
+            }
+          } catch (err) {
+            _d = true;
+            _e = err;
+          } finally {
+            try {
+              if (!_n && _i["return"])
+                _i["return"]();
+            } finally {
+              if (_d)
+                throw _e;
+            }
+          }
+          return _arr;
+        }
+        return function(arr, i) {
+          if (Array.isArray(arr)) {
+            return arr;
+          } else if (Symbol.iterator in Object(arr)) {
+            return sliceIterator(arr, i);
+          } else {
+            throw new TypeError("Invalid attempt to destructure non-iterable instance");
+          }
+        };
+      }();
+      var _createClass = function() {
+        function defineProperties(target, props) {
+          for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];
+            descriptor.enumerable = descriptor.enumerable || false;
+            descriptor.configurable = true;
+            if ("value" in descriptor)
+              descriptor.writable = true;
+            Object.defineProperty(target, descriptor.key, descriptor);
+          }
+        }
+        return function(Constructor, protoProps, staticProps) {
+          if (protoProps)
+            defineProperties(Constructor.prototype, protoProps);
+          if (staticProps)
+            defineProperties(Constructor, staticProps);
+          return Constructor;
+        };
+      }();
+      function _toConsumableArray(arr) {
+        if (Array.isArray(arr)) {
+          for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+            arr2[i] = arr[i];
+          }
+          return arr2;
+        } else {
+          return Array.from(arr);
+        }
+      }
+      function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+          throw new TypeError("Cannot call a class as a function");
+        }
+      }
+      var O = Object;
+      var colorCodes = ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "lightGray", "", "default"];
+      var colorCodesLight = ["darkGray", "lightRed", "lightGreen", "lightYellow", "lightBlue", "lightMagenta", "lightCyan", "white", ""];
+      var styleCodes = ["", "bright", "dim", "italic", "underline", "", "", "inverse"];
+      var asBright = {
+        "red": "lightRed",
+        "green": "lightGreen",
+        "yellow": "lightYellow",
+        "blue": "lightBlue",
+        "magenta": "lightMagenta",
+        "cyan": "lightCyan",
+        "black": "darkGray",
+        "lightGray": "white"
+      };
+      var types = {
+        0: "style",
+        2: "unstyle",
+        3: "color",
+        9: "colorLight",
+        4: "bgColor",
+        10: "bgColorLight"
+      };
+      var subtypes = {
+        color: colorCodes,
+        colorLight: colorCodesLight,
+        bgColor: colorCodes,
+        bgColorLight: colorCodesLight,
+        style: styleCodes,
+        unstyle: styleCodes
+      };
+      var clean = function clean2(obj) {
+        for (var k in obj) {
+          if (!obj[k]) {
+            delete obj[k];
+          }
+        }
+        return O.keys(obj).length === 0 ? void 0 : obj;
+      };
+      var Color = function() {
+        function Color2(background, name, brightness) {
+          _classCallCheck(this, Color2);
+          this.background = background;
+          this.name = name;
+          this.brightness = brightness;
+        }
+        _createClass(Color2, [{
+          key: "defaultBrightness",
+          value: function defaultBrightness(value) {
+            return new Color2(this.background, this.name, this.brightness || value);
+          }
+        }, {
+          key: "css",
+          value: function css(inverted) {
+            var color = inverted ? this.inverse : this;
+            var rgbName = color.brightness === Code.bright && asBright[color.name] || color.name;
+            var prop = color.background ? "background:" : "color:", rgb2 = Colors2.rgb[rgbName], alpha = this.brightness === Code.dim ? 0.5 : 1;
+            return rgb2 ? prop + "rgba(" + [].concat(_toConsumableArray(rgb2), [alpha]).join(",") + ");" : !color.background && alpha < 1 ? "color:rgba(0,0,0,0.5);" : "";
+          }
+        }, {
+          key: "inverse",
+          get: function get() {
+            return new Color2(!this.background, this.name || (this.background ? "black" : "white"), this.brightness);
+          }
+        }, {
+          key: "clean",
+          get: function get() {
+            return clean({
+              name: this.name === "default" ? "" : this.name,
+              bright: this.brightness === Code.bright,
+              dim: this.brightness === Code.dim
+            });
+          }
+        }]);
+        return Color2;
+      }();
+      var Code = function() {
+        function Code2(n) {
+          _classCallCheck(this, Code2);
+          if (n !== void 0) {
+            this.value = Number(n);
+          }
+        }
+        _createClass(Code2, [{
+          key: "type",
+          get: function get() {
+            return types[Math.floor(this.value / 10)];
+          }
+        }, {
+          key: "subtype",
+          get: function get() {
+            return subtypes[this.type][this.value % 10];
+          }
+        }, {
+          key: "str",
+          get: function get() {
+            return this.value ? "[" + this.value + "m" : "";
+          }
+        }, {
+          key: "isBrightness",
+          get: function get() {
+            return this.value === Code2.noBrightness || this.value === Code2.bright || this.value === Code2.dim;
+          }
+        }], [{
+          key: "str",
+          value: function str(x) {
+            return new Code2(x).str;
+          }
+        }]);
+        return Code2;
+      }();
+      O.assign(Code, {
+        reset: 0,
+        bright: 1,
+        dim: 2,
+        inverse: 7,
+        noBrightness: 22,
+        noItalic: 23,
+        noUnderline: 24,
+        noInverse: 27,
+        noColor: 39,
+        noBgColor: 49
+      });
+      var replaceAll = function replaceAll2(str, a, b) {
+        return str.split(a).join(b);
+      };
+      var denormalizeBrightness = function denormalizeBrightness2(s) {
+        return s.replace(/(\u001b\[(1|2)m)/g, "[22m$1");
+      };
+      var normalizeBrightness = function normalizeBrightness2(s) {
+        return s.replace(/\u001b\[22m(\u001b\[(1|2)m)/g, "$1");
+      };
+      var wrap = function wrap2(x, openCode, closeCode) {
+        var open = Code.str(openCode), close = Code.str(closeCode);
+        return String(x).split("\n").map(function(line) {
+          return denormalizeBrightness(open + replaceAll(normalizeBrightness(line), close, open) + close);
+        }).join("\n");
+      };
+      var camel = function camel2(a, b) {
+        return a + b.charAt(0).toUpperCase() + b.slice(1);
+      };
+      var stringWrappingMethods = function() {
+        return [].concat(_toConsumableArray(colorCodes.map(function(k, i) {
+          return !k ? [] : [
+            [k, 30 + i, Code.noColor],
+            [camel("bg", k), 40 + i, Code.noBgColor]
+          ];
+        })), _toConsumableArray(colorCodesLight.map(function(k, i) {
+          return !k ? [] : [
+            [k, 90 + i, Code.noColor],
+            [camel("bg", k), 100 + i, Code.noBgColor]
+          ];
+        })), _toConsumableArray(["", "BrightRed", "BrightGreen", "BrightYellow", "BrightBlue", "BrightMagenta", "BrightCyan"].map(function(k, i) {
+          return !k ? [] : [["bg" + k, 100 + i, Code.noBgColor]];
+        })), _toConsumableArray(styleCodes.map(function(k, i) {
+          return !k ? [] : [
+            [k, i, k === "bright" || k === "dim" ? Code.noBrightness : 20 + i]
+          ];
+        }))).reduce(function(a, b) {
+          return a.concat(b);
+        });
+      }();
+      var assignStringWrappingAPI = function assignStringWrappingAPI2(target) {
+        var wrapBefore = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : target;
+        return stringWrappingMethods.reduce(function(memo, _ref) {
+          var _ref2 = _slicedToArray(_ref, 3), k = _ref2[0], open = _ref2[1], close = _ref2[2];
+          return O.defineProperty(memo, k, {
+            get: function get() {
+              return assignStringWrappingAPI2(function(str) {
+                return wrapBefore(wrap(str, open, close));
+              });
+            }
+          });
+        }, target);
+      };
+      var TEXT = 0;
+      var BRACKET = 1;
+      var CODE = 2;
+      function rawParse(s) {
+        var state = TEXT, buffer = "", text = "", code = "", codes = [];
+        var spans = [];
+        for (var i = 0, n = s.length; i < n; i++) {
+          var c = s[i];
+          buffer += c;
+          switch (state) {
+            case TEXT:
+              if (c === "") {
+                state = BRACKET;
+                buffer = c;
+              } else {
+                text += c;
+              }
+              break;
+            case BRACKET:
+              if (c === "[") {
+                state = CODE;
+                code = "";
+                codes = [];
+              } else {
+                state = TEXT;
+                text += buffer;
+              }
+              break;
+            case CODE:
+              if (c >= "0" && c <= "9") {
+                code += c;
+              } else if (c === ";") {
+                codes.push(new Code(code));
+                code = "";
+              } else if (c === "m") {
+                code = code || "0";
+                codes.push(new Code(code));
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = void 0;
+                try {
+                  for (var _iterator = codes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var _code = _step.value;
+                    spans.push({ text, code: _code });
+                    text = "";
+                  }
+                } catch (err) {
+                  _didIteratorError = true;
+                  _iteratorError = err;
+                } finally {
+                  try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                      _iterator.return();
+                    }
+                  } finally {
+                    if (_didIteratorError) {
+                      throw _iteratorError;
+                    }
+                  }
+                }
+                state = TEXT;
+              } else {
+                state = TEXT;
+                text += buffer;
+              }
+          }
+        }
+        if (state !== TEXT)
+          text += buffer;
+        if (text)
+          spans.push({ text, code: new Code() });
+        return spans;
+      }
+      var Colors2 = function() {
+        function Colors3(s) {
+          _classCallCheck(this, Colors3);
+          this.spans = s ? rawParse(s) : [];
+        }
+        _createClass(Colors3, [{
+          key: Symbol.iterator,
+          value: function value() {
+            return this.spans[Symbol.iterator]();
+          }
+        }, {
+          key: "str",
+          get: function get() {
+            return this.spans.reduce(function(str, p) {
+              return str + p.text + p.code.str;
+            }, "");
+          }
+        }, {
+          key: "parsed",
+          get: function get() {
+            var color = void 0, bgColor = void 0, brightness = void 0, styles = void 0;
+            function reset() {
+              color = new Color(), bgColor = new Color(true), brightness = void 0, styles = new Set();
+            }
+            reset();
+            return O.assign(new Colors3(), {
+              spans: this.spans.map(function(span) {
+                var c = span.code;
+                var inverted = styles.has("inverse"), underline2 = styles.has("underline") ? "text-decoration: underline;" : "", italic2 = styles.has("italic") ? "font-style: italic;" : "", bold = brightness === Code.bright ? "font-weight: bold;" : "";
+                var foreColor = color.defaultBrightness(brightness);
+                var styledSpan = O.assign({ css: bold + italic2 + underline2 + foreColor.css(inverted) + bgColor.css(inverted) }, clean({ bold: !!bold, color: foreColor.clean, bgColor: bgColor.clean }), span);
+                var _iteratorNormalCompletion2 = true;
+                var _didIteratorError2 = false;
+                var _iteratorError2 = void 0;
+                try {
+                  for (var _iterator2 = styles[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var k = _step2.value;
+                    styledSpan[k] = true;
+                  }
+                } catch (err) {
+                  _didIteratorError2 = true;
+                  _iteratorError2 = err;
+                } finally {
+                  try {
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                      _iterator2.return();
+                    }
+                  } finally {
+                    if (_didIteratorError2) {
+                      throw _iteratorError2;
+                    }
+                  }
+                }
+                if (c.isBrightness) {
+                  brightness = c.value;
+                } else if (span.code.value !== void 0) {
+                  if (span.code.value === Code.reset) {
+                    reset();
+                  } else {
+                    switch (span.code.type) {
+                      case "color":
+                      case "colorLight":
+                        color = new Color(false, c.subtype);
+                        break;
+                      case "bgColor":
+                      case "bgColorLight":
+                        bgColor = new Color(true, c.subtype);
+                        break;
+                      case "style":
+                        styles.add(c.subtype);
+                        break;
+                      case "unstyle":
+                        styles.delete(c.subtype);
+                        break;
+                    }
+                  }
+                }
+                return styledSpan;
+              }).filter(function(s) {
+                return s.text.length > 0;
+              })
+            });
+          }
+        }, {
+          key: "asChromeConsoleLogArguments",
+          get: function get() {
+            var spans = this.parsed.spans;
+            return [spans.map(function(s) {
+              return "%c" + s.text;
+            }).join("")].concat(_toConsumableArray(spans.map(function(s) {
+              return s.css;
+            })));
+          }
+        }, {
+          key: "browserConsoleArguments",
+          get: function get() {
+            return this.asChromeConsoleLogArguments;
+          }
+        }], [{
+          key: "parse",
+          value: function parse2(s) {
+            return new Colors3(s).parsed;
+          }
+        }, {
+          key: "strip",
+          value: function strip2(s) {
+            return s.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-PRZcf-nqry=><]/g, "");
+          }
+        }, {
+          key: "nice",
+          get: function get() {
+            Colors3.names.forEach(function(k) {
+              if (!(k in String.prototype)) {
+                O.defineProperty(String.prototype, k, { get: function get2() {
+                  return Colors3[k](this);
+                } });
+              }
+            });
+            return Colors3;
+          }
+        }, {
+          key: "ansicolor",
+          get: function get() {
+            return Colors3;
+          }
+        }]);
+        return Colors3;
+      }();
+      assignStringWrappingAPI(Colors2, function(str) {
+        return str;
+      });
+      Colors2.names = stringWrappingMethods.map(function(_ref3) {
+        var _ref4 = _slicedToArray(_ref3, 1), k = _ref4[0];
+        return k;
+      });
+      Colors2.rgb = {
+        black: [0, 0, 0],
+        darkGray: [100, 100, 100],
+        lightGray: [200, 200, 200],
+        white: [255, 255, 255],
+        red: [204, 0, 0],
+        lightRed: [255, 51, 0],
+        green: [0, 204, 0],
+        lightGreen: [51, 204, 51],
+        yellow: [204, 102, 0],
+        lightYellow: [255, 153, 51],
+        blue: [0, 0, 255],
+        lightBlue: [26, 140, 255],
+        magenta: [204, 0, 204],
+        lightMagenta: [255, 0, 255],
+        cyan: [0, 153, 255],
+        lightCyan: [0, 204, 255]
+      };
+      module.exports = Colors2;
+    }
+  });
+
   // src/index.ts
   var src_exports = {};
   __export(src_exports, {
@@ -1734,7 +1734,7 @@ var Logger = (() => {
   });
 
   // package.json
-  var version = "1.1.1";
+  var version = "1.1.2";
 
   // src/interfaces.ts
   var LogLevelsEnum;
@@ -1755,59 +1755,6 @@ var Logger = (() => {
     LoggerTransportNameEnum2["SMS"] = "sms";
     LoggerTransportNameEnum2["SOCKET"] = "socket";
   })(LoggerTransportNameEnum || (LoggerTransportNameEnum = {}));
-
-  // node_modules/.pnpm/ansicolor@1.1.95/node_modules/ansicolor/build/ansicolor.mjs
-  var import_ansicolor = __toModule(require_ansicolor());
-  var nice = import_ansicolor.default.nice;
-  var parse = import_ansicolor.default.parse;
-  var strip = import_ansicolor.default.strip;
-  var ansicolor = import_ansicolor.default.ansicolor;
-  var black = import_ansicolor.default.black;
-  var bgBlack = import_ansicolor.default.bgBlack;
-  var red = import_ansicolor.default.red;
-  var bgRed = import_ansicolor.default.bgRed;
-  var green = import_ansicolor.default.green;
-  var bgGreen = import_ansicolor.default.bgGreen;
-  var yellow = import_ansicolor.default.yellow;
-  var bgYellow = import_ansicolor.default.bgYellow;
-  var blue = import_ansicolor.default.blue;
-  var bgBlue = import_ansicolor.default.bgBlue;
-  var magenta = import_ansicolor.default.magenta;
-  var bgMagenta = import_ansicolor.default.bgMagenta;
-  var cyan = import_ansicolor.default.cyan;
-  var bgCyan = import_ansicolor.default.bgCyan;
-  var lightGray = import_ansicolor.default.lightGray;
-  var bgLightGray = import_ansicolor.default.bgLightGray;
-  var bgDefault = import_ansicolor.default.bgDefault;
-  var darkGray = import_ansicolor.default.darkGray;
-  var bgDarkGray = import_ansicolor.default.bgDarkGray;
-  var lightRed = import_ansicolor.default.lightRed;
-  var bgLightRed = import_ansicolor.default.bgLightRed;
-  var lightGreen = import_ansicolor.default.lightGreen;
-  var bgLightGreen = import_ansicolor.default.bgLightGreen;
-  var lightYellow = import_ansicolor.default.lightYellow;
-  var bgLightYellow = import_ansicolor.default.bgLightYellow;
-  var lightBlue = import_ansicolor.default.lightBlue;
-  var bgLightBlue = import_ansicolor.default.bgLightBlue;
-  var lightMagenta = import_ansicolor.default.lightMagenta;
-  var bgLightMagenta = import_ansicolor.default.bgLightMagenta;
-  var lightCyan = import_ansicolor.default.lightCyan;
-  var bgLightCyan = import_ansicolor.default.bgLightCyan;
-  var white = import_ansicolor.default.white;
-  var bgWhite = import_ansicolor.default.bgWhite;
-  var bgBrightRed = import_ansicolor.default.bgBrightRed;
-  var bgBrightGreen = import_ansicolor.default.bgBrightGreen;
-  var bgBrightYellow = import_ansicolor.default.bgBrightYellow;
-  var bgBrightBlue = import_ansicolor.default.bgBrightBlue;
-  var bgBrightMagenta = import_ansicolor.default.bgBrightMagenta;
-  var bgBrightCyan = import_ansicolor.default.bgBrightCyan;
-  var bright = import_ansicolor.default.bright;
-  var dim = import_ansicolor.default.dim;
-  var italic = import_ansicolor.default.italic;
-  var underline = import_ansicolor.default.underline;
-  var inverse = import_ansicolor.default.inverse;
-  var names = import_ansicolor.default.names;
-  var rgb = import_ansicolor.default.rgb;
 
   // src/transports/base.ts
   var import_serialize_error = __toModule(require_serialize_error());
@@ -1862,6 +1809,59 @@ var Logger = (() => {
   };
   var LoggerTransport = _LoggerTransport;
   LoggerTransport.instances = {};
+
+  // node_modules/.pnpm/ansicolor@1.1.95/node_modules/ansicolor/build/ansicolor.mjs
+  var import_ansicolor = __toModule(require_ansicolor());
+  var nice = import_ansicolor.default.nice;
+  var parse = import_ansicolor.default.parse;
+  var strip = import_ansicolor.default.strip;
+  var ansicolor = import_ansicolor.default.ansicolor;
+  var black = import_ansicolor.default.black;
+  var bgBlack = import_ansicolor.default.bgBlack;
+  var red = import_ansicolor.default.red;
+  var bgRed = import_ansicolor.default.bgRed;
+  var green = import_ansicolor.default.green;
+  var bgGreen = import_ansicolor.default.bgGreen;
+  var yellow = import_ansicolor.default.yellow;
+  var bgYellow = import_ansicolor.default.bgYellow;
+  var blue = import_ansicolor.default.blue;
+  var bgBlue = import_ansicolor.default.bgBlue;
+  var magenta = import_ansicolor.default.magenta;
+  var bgMagenta = import_ansicolor.default.bgMagenta;
+  var cyan = import_ansicolor.default.cyan;
+  var bgCyan = import_ansicolor.default.bgCyan;
+  var lightGray = import_ansicolor.default.lightGray;
+  var bgLightGray = import_ansicolor.default.bgLightGray;
+  var bgDefault = import_ansicolor.default.bgDefault;
+  var darkGray = import_ansicolor.default.darkGray;
+  var bgDarkGray = import_ansicolor.default.bgDarkGray;
+  var lightRed = import_ansicolor.default.lightRed;
+  var bgLightRed = import_ansicolor.default.bgLightRed;
+  var lightGreen = import_ansicolor.default.lightGreen;
+  var bgLightGreen = import_ansicolor.default.bgLightGreen;
+  var lightYellow = import_ansicolor.default.lightYellow;
+  var bgLightYellow = import_ansicolor.default.bgLightYellow;
+  var lightBlue = import_ansicolor.default.lightBlue;
+  var bgLightBlue = import_ansicolor.default.bgLightBlue;
+  var lightMagenta = import_ansicolor.default.lightMagenta;
+  var bgLightMagenta = import_ansicolor.default.bgLightMagenta;
+  var lightCyan = import_ansicolor.default.lightCyan;
+  var bgLightCyan = import_ansicolor.default.bgLightCyan;
+  var white = import_ansicolor.default.white;
+  var bgWhite = import_ansicolor.default.bgWhite;
+  var bgBrightRed = import_ansicolor.default.bgBrightRed;
+  var bgBrightGreen = import_ansicolor.default.bgBrightGreen;
+  var bgBrightYellow = import_ansicolor.default.bgBrightYellow;
+  var bgBrightBlue = import_ansicolor.default.bgBrightBlue;
+  var bgBrightMagenta = import_ansicolor.default.bgBrightMagenta;
+  var bgBrightCyan = import_ansicolor.default.bgBrightCyan;
+  var bright = import_ansicolor.default.bright;
+  var dim = import_ansicolor.default.dim;
+  var italic = import_ansicolor.default.italic;
+  var underline = import_ansicolor.default.underline;
+  var inverse = import_ansicolor.default.inverse;
+  var names = import_ansicolor.default.names;
+  var rgb = import_ansicolor.default.rgb;
 
   // src/transports/console.ts
   var LogLevels = __spreadValues({}, LogLevelsEnum);
@@ -2214,6 +2214,7 @@ var Logger = (() => {
   Logger.version = version;
   Logger.LoggerTransportName = LoggerTransportName;
   Logger.LogLevels = LogLevels2;
+  Logger.LoggerTransport = LoggerTransport;
   return src_exports;
 })();
 //# sourceMappingURL=logger.js.map

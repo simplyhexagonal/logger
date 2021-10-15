@@ -68,6 +68,7 @@ export default class Logger {
         FATAL: LogLevelsEnum.FATAL;
         ALL: LogLevelsEnum.ALL;
     };
+    static LoggerTransport: typeof LoggerTransport;
     optionsByLevel: LoggerTransportOptionsByLevel;
     availableTransports: LoggerTransportClasses;
     transportInstances: TransportInstances;
