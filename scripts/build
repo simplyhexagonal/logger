@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
 rm -rf dist/*
-esbuild src/index.ts --bundle --target=chrome60,firefox60,safari12,edge18 \
+esbuild src/index.ts --bundle --external:xxhashjs \
+  --target=chrome60,firefox60,safari12,edge18 \
   --outfile=dist/logger.js --sourcemap --format=iife --global-name=Logger \
-  && esbuild src/index.ts --bundle --target=chrome60,firefox60,safari12,edge18 \
+  && esbuild src/index.ts --bundle --external:xxhashjs \
+  --target=chrome60,firefox60,safari12,edge18 \
   --outfile=dist/logger.min.js --minify --format=iife --global-name=Logger \
   && tsc -d --emitDeclarationOnly --rootDir src --outDir dist \
   && mv dist/index.d.ts dist/logger.d.ts \

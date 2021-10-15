@@ -1,7 +1,14 @@
 import { serializeError } from 'serialize-error';
-import XXH from 'xxhashjs';
 
 import { ILoggerTransport, LoggerTransportOptions } from '../interfaces';
+
+let XXH: any;
+
+if (typeof window !== 'undefined') {
+  XXH = (window as any).XXH;
+} else {
+  XXH = require('xxhashjs');
+}
 
 const stringify = (obj: unknown): string => {
   let cache: unknown[] = [];
