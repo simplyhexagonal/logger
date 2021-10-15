@@ -1734,7 +1734,7 @@ var Logger = (() => {
   });
 
   // package.json
-  var version = "1.2.0";
+  var version = "1.2.1";
 
   // src/interfaces.ts
   var LogLevelsEnum;
