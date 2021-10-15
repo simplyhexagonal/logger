@@ -72,3 +72,12 @@ export interface LoggerTransportOptions<
 export type LoggerTransportOptionsByLevel = {
   [k in LogLevelsEnum]: LoggerTransportOptions[];
 }
+
+export interface AppIdentifiers {
+  region?: string;
+  clusterType?: string;
+  cluster?: string;
+  hostname?: string;
+  ip?: string;
+  app?: string;
+}

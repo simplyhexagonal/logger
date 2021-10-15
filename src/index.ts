@@ -9,6 +9,7 @@ import {
   LoggerTransportOptionsByLevel,
   LoggerTransportResult,
   LoggerBroadcastFns,
+  AppIdentifiers,
 } from './interfaces';
 
 import { LoggerTransport } from './transports/base';
@@ -48,6 +49,7 @@ export interface LoggerOptions {
   logLevel?: keyof typeof LOG_LEVELS;
   catchTransportErrors?: boolean;
   fallbackTransport?: typeof LoggerTransport;
+  appIdentifiers?: AppIdentifiers;
 }
 
 const defaultLoggerTransportOptions: LoggerTransportOptions = {
@@ -102,9 +104,34 @@ export default class Logger {
   transportInstances: TransportInstances = JSON.parse(
     JSON.stringify(initialTransportInstances)
   );
+  appIdentifiers: AppIdentifiers = {};
 
   catchTransportErrors: boolean = false;
   readonly fallbackTransport: undefined | LoggerTransport;
+
+  private appIdString(): string {
+    const {
+      region,
+      clusterType,
+      cluster,
+      hostname,
+      ip,
+      app,
+    } = this.appIdentifiers;
+
+    const result = [
+      region,
+      clusterType,
+      cluster,
+      hostname,
+      ip,
+      app
+    ].filter(
+      (i) => i
+    ).join(' > ');
+
+    return (result) ? `[${result}]` : '';
+  }
 
   constructor({
     optionsByLevel,
@@ -113,9 +140,11 @@ export default class Logger {
     logLevel,
     catchTransportErrors,
     fallbackTransport,
+    appIdentifiers,
   }: LoggerOptions) {
     this.optionsByLevel = { ...defaultOptionsByLevel, ...optionsByLevel };
     this.availableTransports = {...defaultTransports, ...transports};
+    this.appIdentifiers = appIdentifiers || {};
 
     const {
       LOG_LEVEL,
@@ -252,7 +281,11 @@ export default class Logger {
 
         if (channelName === '-' || transport.channelName === channelName) {
           const result = transport[level as LogLevelsEnum](
-            [new Date().toISOString(), ...message]
+            [
+              this.appIdString(),
+              new Date().toISOString(),
+              ...message,
+            ].filter((m) => m)
           ).catch((e) => {
             if (!this.catchTransportErrors) {
               throw e;

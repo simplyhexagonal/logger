@@ -448,6 +448,7 @@ server();
 
 We have the following officially supported transports:
 
+- [WebSocket]() (Coming soon)
 - [Discord](https://www.npmjs.com/package/@simplyhexagonal/logger-transport-discord)
 - [Slack]() (Coming soon)
 - [Email]() (Coming soon)

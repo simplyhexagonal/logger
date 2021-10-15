@@ -424,4 +424,79 @@ describe('logger', () => {
     expect(result[0].error).toBeDefined();
     expect((result[0].result as any).destination).not.toBe('mock');
   });
+
+  it('should be able to be configured with app identifiers', async () => {
+    const messages: string[] = [];
+
+    const {log} = console;
+    console.log = (...args) => {
+      messages.push(args[0] as unknown as string);
+      log(...args);
+    };
+
+    const logger0 = new Logger({
+      singleton: false,
+    });
+
+    const logger1 = new Logger({
+      singleton: false,
+      appIdentifiers: {
+        clusterType: 'TEST',
+      },
+    });
+
+    const logger2 = new Logger({
+      singleton: false,
+      appIdentifiers: {
+        clusterType: 'TEST',
+        app: 'logger',
+      },
+    });
+
+    const logger3 = new Logger({
+      singleton: false,
+      appIdentifiers: {
+        region: 'local',
+        clusterType: 'TEST',
+        cluster: 'jest',
+        hostname: 'simplyhexagonal',
+        ip: '0.0.0.0',
+        app: 'logger',
+      },
+    });
+
+    await logger0.all('1');
+    await logger1.warn('2');
+    await logger2.info('3');
+    await logger3.debug('4');
+
+    // no expectationRegex0 as logger0 has no appIdentifiers
+    const expectationRegex1 = /\[TEST\]/;
+    const expectationRegex2 = /\[TEST > logger\]/;
+    const expectationRegex3 = /\[local > TEST > jest > simplyhexagonal > 0.0.0.0 > logger\]/;
+
+    expect(
+      expectationRegex1.test(messages[0])
+      || expectationRegex2.test(messages[0])
+      || expectationRegex3.test(messages[0])
+    ).toBe(false);
+
+    expect(expectationRegex1.test(messages[1])).toBe(true);
+    expect(
+      expectationRegex2.test(messages[1])
+      || expectationRegex3.test(messages[1])
+    ).toBe(false);
+    expect(expectationRegex2.test(messages[2])).toBe(true);
+    expect(
+      expectationRegex1.test(messages[2])
+      || expectationRegex3.test(messages[2])
+    ).toBe(false);
+    expect(expectationRegex3.test(messages[3])).toBe(true);
+    expect(
+      expectationRegex1.test(messages[3])
+      || expectationRegex2.test(messages[3])
+    ).toBe(false);
+
+    console.log = log;
+  });
 });
