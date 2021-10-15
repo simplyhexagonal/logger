@@ -14,7 +14,7 @@
     "sourceMap": true,
     "strict": true,
     "noImplicitReturns": true,
-    "lib": ["esnext"],
+    "lib": ["esnext", "DOM"],
     "downlevelIteration": true
   },
   "exclude": ["node_modules", "dist", "tests"],
