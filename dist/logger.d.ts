@@ -1,4 +1,4 @@
-import { LoggerTransportNameEnum, LogLevelsEnum, TransportInstances, LoggerTransportOptionsByLevel, LoggerTransportResult, LoggerBroadcastFns } from './interfaces';
+import { LoggerTransportNameEnum, LogLevelsEnum, TransportInstances, LoggerTransportOptionsByLevel, LoggerTransportResult, LoggerBroadcastFns, AppIdentifiers } from './interfaces';
 import { LoggerTransport } from './transports/base';
 export * from './interfaces';
 export { LoggerTransport } from './transports/base';
@@ -42,6 +42,7 @@ export interface LoggerOptions {
     logLevel?: keyof typeof LOG_LEVELS;
     catchTransportErrors?: boolean;
     fallbackTransport?: typeof LoggerTransport;
+    appIdentifiers?: AppIdentifiers;
 }
 /**
  * The `Logger` class does the heavy-lifting of keeping track of transports,
@@ -70,9 +71,11 @@ export default class Logger {
     optionsByLevel: LoggerTransportOptionsByLevel;
     availableTransports: LoggerTransportClasses;
     transportInstances: TransportInstances;
+    appIdentifiers: AppIdentifiers;
     catchTransportErrors: boolean;
     readonly fallbackTransport: undefined | LoggerTransport;
-    constructor({ optionsByLevel, transports, singleton, logLevel, catchTransportErrors, fallbackTransport, }: LoggerOptions);
+    private appIdString;
+    constructor({ optionsByLevel, transports, singleton, logLevel, catchTransportErrors, fallbackTransport, appIdentifiers, }: LoggerOptions);
     debug(...message: unknown[]): Promise<LoggerTransportResult[]>;
     info(...message: unknown[]): Promise<LoggerTransportResult[]>;
     warn(...message: unknown[]): Promise<LoggerTransportResult[]>;

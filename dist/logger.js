@@ -1734,7 +1734,7 @@ var Logger = (() => {
   });
 
   // package.json
-  var version = "1.0.2";
+  var version = "1.1.0";
 
   // src/interfaces.ts
   var LogLevelsEnum;
@@ -2075,12 +2075,15 @@ var Logger = (() => {
       singleton = true,
       logLevel,
       catchTransportErrors,
-      fallbackTransport
+      fallbackTransport,
+      appIdentifiers
     }) {
       this.transportInstances = JSON.parse(JSON.stringify(initialTransportInstances));
+      this.appIdentifiers = {};
       this.catchTransportErrors = false;
       this.optionsByLevel = __spreadValues(__spreadValues({}, defaultOptionsByLevel), optionsByLevel);
       this.availableTransports = __spreadValues(__spreadValues({}, defaultTransports), transports);
+      this.appIdentifiers = appIdentifiers || {};
       const {
         LOG_LEVEL,
         LOGGER_CATCH_TRANSPORT_ERRORS
@@ -2122,6 +2125,25 @@ var Logger = (() => {
           });
         }
       });
+    }
+    appIdString() {
+      const {
+        region,
+        clusterType,
+        cluster,
+        hostname,
+        ip,
+        app
+      } = this.appIdentifiers;
+      const result = [
+        region,
+        clusterType,
+        cluster,
+        hostname,
+        ip,
+        app
+      ].filter((i) => i).join(" > ");
+      return result ? `[${result}]` : "";
     }
     debug(...message) {
       return this.broadcast(message, LogLevels2.DEBUG);
@@ -2168,7 +2190,11 @@ var Logger = (() => {
       await this.transportInstances[level].reduce(async (a, transport) => {
         await a;
         if (channelName === "-" || transport.channelName === channelName) {
-          const result = transport[level]([new Date().toISOString(), ...message]).catch((e) => {
+          const result = transport[level]([
+            this.appIdString(),
+            new Date().toISOString(),
+            ...message
+          ].filter((m) => m)).catch((e) => {
             if (!this.catchTransportErrors) {
               throw e;
             }
