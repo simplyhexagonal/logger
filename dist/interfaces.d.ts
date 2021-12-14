@@ -4,7 +4,8 @@ export declare enum LogLevelsEnum {
     WARN = "warn",
     ERROR = "error",
     FATAL = "fatal",
-    ALL = "all"
+    ALL = "all",
+    RAW = "raw"
 }
 export declare enum LoggerTransportNameEnum {
     CONSOLE = "console",
@@ -27,6 +28,7 @@ export declare type LoggerTransportFns = {
     [LogLevelsEnum.ERROR]: (...message: unknown[]) => Promise<LoggerTransportResult>;
     [LogLevelsEnum.FATAL]: (...message: unknown[]) => Promise<LoggerTransportResult>;
     [LogLevelsEnum.ALL]: (...message: unknown[]) => Promise<LoggerTransportResult>;
+    [LogLevelsEnum.RAW]: (...message: unknown[]) => Promise<LoggerTransportResult>;
 };
 export interface ILoggerTransport extends LoggerTransportFns {
     readonly _id: string;
@@ -41,6 +43,7 @@ export declare type LoggerBroadcastFns = {
     [LogLevelsEnum.ERROR]: (...message: unknown[]) => Promise<LoggerTransportResult[]>;
     [LogLevelsEnum.FATAL]: (...message: unknown[]) => Promise<LoggerTransportResult[]>;
     [LogLevelsEnum.ALL]: (...message: unknown[]) => Promise<LoggerTransportResult[]>;
+    [LogLevelsEnum.RAW]: (...message: unknown[]) => Promise<LoggerTransportResult[]>;
 };
 export declare type TransportInstances = {
     [k in LogLevelsEnum]: ILoggerTransport[];

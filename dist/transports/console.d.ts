@@ -33,5 +33,10 @@ export default class ConsoleTransport extends LoggerTransport {
         channelName: string;
         result: boolean;
     }>;
+    raw([prefixes, ...message]: unknown[]): Promise<{
+        destination: string;
+        channelName: string;
+        result: boolean;
+    }>;
     recolor(formattedMessage: string): string[];
 }

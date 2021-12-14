@@ -13,6 +13,7 @@ export declare class LoggerTransport implements ILoggerTransport {
     error(..._message: unknown[]): Promise<{}>;
     fatal(..._message: unknown[]): Promise<{}>;
     all(..._message: unknown[]): Promise<{}>;
+    raw(..._message: unknown[]): Promise<{}>;
     format(message: unknown[]): string;
     constructor({ r, destination, channelName }: (LoggerTransportOptions['options'] & {
         r?: string;

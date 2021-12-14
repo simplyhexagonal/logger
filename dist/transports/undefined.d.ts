@@ -11,6 +11,7 @@ export default class UndefinedTransport extends LoggerTransport {
     error(message: unknown[]): Promise<{}>;
     fatal(message: unknown[]): Promise<{}>;
     all(message: unknown[]): Promise<{}>;
+    raw(message: unknown[]): Promise<{}>;
     throwDefault(): void;
     recolor(formattedMessage: string): string[];
 }

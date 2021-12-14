@@ -17,6 +17,7 @@ export declare const LogLevels: {
     ERROR: LogLevelsEnum.ERROR;
     FATAL: LogLevelsEnum.FATAL;
     ALL: LogLevelsEnum.ALL;
+    RAW: LogLevelsEnum.RAW;
 };
 export interface LoggerTransportClasses {
     [LoggerTransportName.CONSOLE]: typeof LoggerTransport;
@@ -34,6 +35,7 @@ declare const LOG_LEVELS: {
     error: number;
     fatal: number;
     all: number;
+    raw: number;
 };
 export interface LoggerOptions {
     optionsByLevel?: LoggerTransportOptionsByLevel;
@@ -67,6 +69,7 @@ export default class Logger {
         ERROR: LogLevelsEnum.ERROR;
         FATAL: LogLevelsEnum.FATAL;
         ALL: LogLevelsEnum.ALL;
+        RAW: LogLevelsEnum.RAW;
     };
     static LoggerTransport: typeof LoggerTransport;
     optionsByLevel: LoggerTransportOptionsByLevel;
@@ -83,6 +86,7 @@ export default class Logger {
     error(...message: unknown[]): Promise<LoggerTransportResult[]>;
     fatal(...message: unknown[]): Promise<LoggerTransportResult[]>;
     all(...message: unknown[]): Promise<LoggerTransportResult[]>;
+    raw(...message: unknown[]): Promise<LoggerTransportResult[]>;
     channel(channelName: string): LoggerBroadcastFns;
     broadcast(message: unknown[], level: LogLevelsEnum, channelName?: string): Promise<LoggerTransportResult[]>;
 }

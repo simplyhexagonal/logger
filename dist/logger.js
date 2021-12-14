@@ -671,7 +671,7 @@ var Logger = (() => {
   });
 
   // package.json
-  var version = "1.2.2";
+  var version = "1.3.0";
 
   // src/interfaces.ts
   var LogLevelsEnum;
@@ -682,6 +682,7 @@ var Logger = (() => {
     LogLevelsEnum2["ERROR"] = "error";
     LogLevelsEnum2["FATAL"] = "fatal";
     LogLevelsEnum2["ALL"] = "all";
+    LogLevelsEnum2["RAW"] = "raw";
   })(LogLevelsEnum || (LogLevelsEnum = {}));
   var LoggerTransportNameEnum;
   (function(LoggerTransportNameEnum2) {
@@ -733,6 +734,9 @@ var Logger = (() => {
       return {};
     }
     async all(..._message) {
+      return {};
+    }
+    async raw(..._message) {
       return {};
     }
     format(message) {
@@ -900,6 +904,14 @@ var Logger = (() => {
         result: true
       };
     }
+    async raw([prefixes, ...message]) {
+      console.log(this.format(message));
+      return {
+        destination: this.destination,
+        channelName: this.channelName,
+        result: true
+      };
+    }
     recolor(formattedMessage) {
       if (this._isBrowser) {
         return parse(formattedMessage).asChromeConsoleLogArguments;
@@ -951,6 +963,10 @@ var Logger = (() => {
       this.throwDefault();
       return {};
     }
+    async raw(message) {
+      this.throwDefault();
+      return {};
+    }
     throwDefault() {
       const errorMessage = errorString.replace("TRANSPORT_NAME", this.transportName || "undefined");
       const error = new UndefinedTransportError(errorMessage, {
@@ -977,7 +993,8 @@ var Logger = (() => {
     warn: 20,
     error: 30,
     fatal: 40,
-    all: 100
+    all: 100,
+    raw: 110
   };
   var defaultLoggerTransportOptions = {
     transport: LoggerTransportName.CONSOLE,
@@ -992,7 +1009,8 @@ var Logger = (() => {
     warn: [defaultLoggerTransportOptions],
     error: [defaultLoggerTransportOptions],
     fatal: [defaultLoggerTransportOptions],
-    all: [defaultLoggerTransportOptions]
+    all: [defaultLoggerTransportOptions],
+    raw: [defaultLoggerTransportOptions]
   };
   var initialTransportInstances = {
     debug: [],
@@ -1000,7 +1018,8 @@ var Logger = (() => {
     warn: [],
     error: [],
     fatal: [],
-    all: []
+    all: [],
+    raw: []
   };
   var defaultTransports = {
     [LoggerTransportName.CONSOLE]: ConsoleTransport,
@@ -1105,6 +1124,9 @@ var Logger = (() => {
     all(...message) {
       return this.broadcast(message, LogLevels2.ALL);
     }
+    raw(...message) {
+      return this.broadcast(message, LogLevels2.RAW);
+    }
     channel(channelName) {
       return {
         [LogLevels2.DEBUG]: async (...message) => {
@@ -1124,6 +1146,9 @@ var Logger = (() => {
         },
         [LogLevels2.ALL]: async (...message) => {
           return this.broadcast(message, LogLevels2.ALL, channelName);
+        },
+        [LogLevels2.RAW]: async (...message) => {
+          return this.broadcast(message, LogLevels2.RAW, channelName);
         }
       };
     }
