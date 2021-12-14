@@ -66,6 +66,11 @@ export default class UndefinedTransport extends LoggerTransport {
     return {};
   }
 
+  async raw(message: unknown[]) {
+    this.throwDefault();
+    return {};
+  }
+
   throwDefault() {
     const errorMessage = errorString.replace('TRANSPORT_NAME', this.transportName || 'undefined');
     const error = new UndefinedTransportError(

@@ -40,6 +40,7 @@ const LOG_LEVELS = {
   error: 30,
   fatal: 40,
   all: 100,
+  raw: 110,
 };
 
 export interface LoggerOptions {
@@ -67,6 +68,7 @@ const defaultOptionsByLevel: LoggerTransportOptionsByLevel = {
   error: [defaultLoggerTransportOptions],
   fatal: [defaultLoggerTransportOptions],
   all: [defaultLoggerTransportOptions],
+  raw: [defaultLoggerTransportOptions],
 };
 
 const initialTransportInstances: TransportInstances = {
@@ -76,6 +78,7 @@ const initialTransportInstances: TransportInstances = {
   error: [],
   fatal: [],
   all: [],
+  raw: [],
 };
 
 const defaultTransports = {
@@ -246,6 +249,10 @@ export default class Logger {
     return this.broadcast(message, LogLevels.ALL);
   }
 
+  raw(...message: unknown[]) {
+    return this.broadcast(message, LogLevels.RAW);
+  }
+
   channel(channelName: string): LoggerBroadcastFns {
     return {
       [LogLevels.DEBUG]: async (...message: unknown[]) => {
@@ -265,6 +272,9 @@ export default class Logger {
       },
       [LogLevels.ALL]: async (...message: unknown[]) => {
         return this.broadcast(message, LogLevels.ALL, channelName)
+      },
+      [LogLevels.RAW]: async (...message: unknown[]) => {
+        return this.broadcast(message, LogLevels.RAW, channelName)
       },
     };
   }

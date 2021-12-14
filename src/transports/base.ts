@@ -59,6 +59,8 @@ export class LoggerTransport implements ILoggerTransport {
 
   async all(..._message: unknown[]) { return {}; }
 
+  async raw(..._message: unknown[]) { return {}; }
+
   format(message: unknown[]): string {
     return message.map(stringify).join(' ').replace(/\n (\S)/g, '\n$1');
   }

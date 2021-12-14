@@ -69,6 +69,10 @@ There are 6 log levels:
 - fatal
 - all
 
+And a bypass level that outputs the message with no date, level, nor colors:
+
+- raw
+
 In your code you log messages to specific log levels:
 
 ```ts
@@ -101,6 +105,7 @@ Each log level is given a number value:
   error: 30,
   fatal: 40,
   all: 100,
+  raw: 110,
 }
 ```
 
@@ -225,6 +230,7 @@ const optionsByLevel = {
   ],
   fatal: [],
   all: [],
+  raw: [],
 };
 
 const transports = {
@@ -373,6 +379,7 @@ const options = {
     ],
     fatal: [],
     all: [],
+    raw: [],
   },
   transports: {
     [`${LoggerTransportName.DISCORD}`]: DiscordTransport,
@@ -385,15 +392,16 @@ const options = {
 const logger = new Logger(options);
 ```
 
-## The `all` log level
+## The `all` and `raw` log levels
 
-An important thing to note is that transports defined for the `all` log level will **always**
-be instantiated.
+An important thing to note is that transports defined for the `all` and `raw` log levels will
+**always** be instantiated.
 
-In the same way, calls to `logger.all()` will **always** log.
+In the same way, calls to `logger.all()` or `logger.raw()` will **always** log.
 
 For this reason we suggest only ever using `logger.all()` when an app starts and when an app is
-manually stopped.
+manually stopped, and only use `logger.raw()` when outputting messages you absolutely **need** to
+be unformatted.
 
 ## Channels
 

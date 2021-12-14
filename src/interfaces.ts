@@ -5,6 +5,7 @@ export enum LogLevelsEnum {
   ERROR = 'error',
   FATAL = 'fatal',
   ALL = 'all',
+  RAW = 'raw',
 }
 
 // These are our MVP but should be extended to be kept up to date as we officially
@@ -32,6 +33,7 @@ export type LoggerTransportFns = {
   [LogLevelsEnum.ERROR]: (...message: unknown[]) => Promise<LoggerTransportResult>;
   [LogLevelsEnum.FATAL]: (...message: unknown[]) => Promise<LoggerTransportResult>;
   [LogLevelsEnum.ALL]: (...message: unknown[]) => Promise<LoggerTransportResult>;
+  [LogLevelsEnum.RAW]: (...message: unknown[]) => Promise<LoggerTransportResult>;
 }
 
 export interface ILoggerTransport extends LoggerTransportFns {
@@ -48,6 +50,7 @@ export type LoggerBroadcastFns = {
   [LogLevelsEnum.ERROR]: (...message: unknown[]) => Promise<LoggerTransportResult[]>;
   [LogLevelsEnum.FATAL]: (...message: unknown[]) => Promise<LoggerTransportResult[]>;
   [LogLevelsEnum.ALL]: (...message: unknown[]) => Promise<LoggerTransportResult[]>;
+  [LogLevelsEnum.RAW]: (...message: unknown[]) => Promise<LoggerTransportResult[]>;
 }
 
 export type TransportInstances = {

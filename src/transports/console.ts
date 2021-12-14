@@ -136,6 +136,16 @@ export default class ConsoleTransport extends LoggerTransport {
     };
   }
 
+  async raw([prefixes, ...message]: unknown[]) {
+    console.log(this.format(message));
+
+    return {
+      destination: this.destination,
+      channelName: this.channelName,
+      result: true,
+    };
+  }
+
   recolor(formattedMessage: string) {
     if (this._isBrowser) {
       return parse(formattedMessage).asChromeConsoleLogArguments;
