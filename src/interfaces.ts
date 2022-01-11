@@ -57,19 +57,15 @@ export type TransportInstances = {
   [k in LogLevelsEnum]: ILoggerTransport[];
 }
 
-export interface LoggerTransportOptions<
-  T extends {
-    destination: string,
-    channelName?: string,
-    name?: string;
-  } = {
-    destination: string,
-    channelName?: string,
-    name?: string;
-  }
-> {
+export interface BaseLoggerTransportOptions {
+  destination: string,
+  channelName?: string,
+  name?: string;
+}
+
+export interface LoggerTransportOptions<T = any> {
   transport: LoggerTransportNameEnum | string;
-  options: T;
+  options: BaseLoggerTransportOptions & T;
 }
 
 export type LoggerTransportOptionsByLevel = {

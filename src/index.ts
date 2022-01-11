@@ -33,6 +33,14 @@ export interface LoggerTransportClasses {
   [k: string]: typeof LoggerTransport | undefined;
 }
 
+let performanceShim: Performance;
+
+if (typeof window === 'undefined' || !window.performance) {
+  performanceShim = require('perf_hooks').performance;
+} else {
+  performanceShim = window.performance;
+}
+
 const LOG_LEVELS = {
   debug: 0,
   info: 10,
@@ -102,6 +110,11 @@ export default class Logger {
   static LoggerTransportName = LoggerTransportName;
   static LogLevels = LogLevels;
   static LoggerTransport = LoggerTransport;
+  static hrTime() {
+    return performanceShim.timeOrigin + performanceShim.now();
+  }
+
+  _timers: {[k: string]: number} = {};
 
   optionsByLevel: LoggerTransportOptionsByLevel;
   availableTransports: LoggerTransportClasses;
@@ -225,56 +238,84 @@ export default class Logger {
     });
   }
 
-  debug(...message: unknown[]) {
-    return this.broadcast(message, LogLevels.DEBUG);
+  time(operationIdentifier: string) {
+    this._timers[operationIdentifier] = Logger.hrTime();
   }
 
-  info(...message: unknown[]) {
-    return this.broadcast(message, LogLevels.INFO);
+  async timeEnd(operationIdentifier: string) {
+    const {
+      [`${operationIdentifier}`]: time,
+      ...rest
+    } = this._timers;
+
+    if (!time) {
+      await this.channel(LoggerTransportName.CONSOLE).warn(`Timer '${operationIdentifier}' does not exist`);
+      return -1;
+    }
+
+    this._timers = rest;
+
+    const result = Logger.hrTime() - time;
+
+    await this.raw(`${operationIdentifier}: ${result} ms`);
+
+    return result;
   }
 
-  warn(...message: unknown[]) {
-    return this.broadcast(message, LogLevels.WARN);
+  cleanupTimers() {
+    this._timers = {};
   }
 
-  error(...message: unknown[]) {
-    return this.broadcast(message, LogLevels.ERROR);
+  async debug(...message: unknown[]) {
+    return await this.broadcast(message, LogLevels.DEBUG);
   }
 
-  fatal(...message: unknown[]) {
-    return this.broadcast(message, LogLevels.FATAL);
+  async info(...message: unknown[]) {
+    return await this.broadcast(message, LogLevels.INFO);
   }
 
-  all(...message: unknown[]) {
-    return this.broadcast(message, LogLevels.ALL);
+  async warn(...message: unknown[]) {
+    return await this.broadcast(message, LogLevels.WARN);
   }
 
-  raw(...message: unknown[]) {
-    return this.broadcast(message, LogLevels.RAW);
+  async error(...message: unknown[]) {
+    return await this.broadcast(message, LogLevels.ERROR);
+  }
+
+  async fatal(...message: unknown[]) {
+    return await this.broadcast(message, LogLevels.FATAL);
+  }
+
+  async all(...message: unknown[]) {
+    return await this.broadcast(message, LogLevels.ALL);
+  }
+
+  async raw(...message: unknown[]) {
+    return await this.broadcast(message, LogLevels.RAW);
   }
 
   channel(channelName: string): LoggerBroadcastFns {
     return {
       [LogLevels.DEBUG]: async (...message: unknown[]) => {
-        return this.broadcast(message, LogLevels.DEBUG, channelName)
+        return await this.broadcast(message, LogLevels.DEBUG, channelName)
       },
       [LogLevels.INFO]: async (...message: unknown[]) => {
-        return this.broadcast(message, LogLevels.INFO, channelName)
+        return await this.broadcast(message, LogLevels.INFO, channelName)
       },
       [LogLevels.WARN]: async (...message: unknown[]) => {
-        return this.broadcast(message, LogLevels.WARN, channelName)
+        return await this.broadcast(message, LogLevels.WARN, channelName)
       },
       [LogLevels.ERROR]: async (...message: unknown[]) => {
-        return this.broadcast(message, LogLevels.ERROR, channelName)
+        return await this.broadcast(message, LogLevels.ERROR, channelName)
       },
       [LogLevels.FATAL]: async (...message: unknown[]) => {
-        return this.broadcast(message, LogLevels.FATAL, channelName)
+        return await this.broadcast(message, LogLevels.FATAL, channelName)
       },
       [LogLevels.ALL]: async (...message: unknown[]) => {
-        return this.broadcast(message, LogLevels.ALL, channelName)
+        return await this.broadcast(message, LogLevels.ALL, channelName)
       },
       [LogLevels.RAW]: async (...message: unknown[]) => {
-        return this.broadcast(message, LogLevels.RAW, channelName)
+        return await this.broadcast(message, LogLevels.RAW, channelName)
       },
     };
   }

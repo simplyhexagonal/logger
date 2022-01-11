@@ -1,36 +1,16 @@
 import Logger, {
   LoggerTransportName,
-  LoggerTransportOptions,
   LoggerTransportResult,
   LogLevels,
-  LoggerTransport,
+  LoggerTransportOptions,
 } from '../src';
 
 import { errorString } from '../src/transports/undefined';
 
-class MockTransport extends LoggerTransport {
-  readonly destination: string;
+import MockFallbackTransport from './mock-fallback.transport';
+import MockTransport from './mock.transport';
 
-  constructor(options: LoggerTransportOptions['options']) {
-    const r = Math.random().toString(36).substring(7);
-    super({...options, r});
-
-    this.destination = 'mock';
-
-    if (r !== this._r) {
-      return this;
-    }
-  }
-
-  async error([timestamp, ...message]: unknown[]) {
-    console.log(timestamp, 'MOCK:', ...message);
-
-    return {
-      destination: this.destination,
-      channelName: this.channelName,
-    };
-  }
-}
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 describe('logger', () => {
   /** 
@@ -433,7 +413,7 @@ describe('logger', () => {
       optionsByLevel: optionsByLevel,
       singleton: false,
       catchTransportErrors: true,
-      fallbackTransport: MockTransport,
+      fallbackTransport: MockFallbackTransport,
     });
 
     const logger2 = new Logger({
@@ -530,4 +510,83 @@ describe('logger', () => {
 
     console.log = log;
   });
+
+  it('can time operations and clean up timers', async () => {
+    const timeMessages: string[] = [];
+
+    const mockOptions: LoggerTransportOptions<{callback: (message: string[]) => Promise<any>}> = {
+      transport: 'mock',
+      options: {
+        destination: 'mock',
+        callback: async ([prefix, message]) => {
+          console.log(message);
+          timeMessages.push(message);
+        },
+      }
+    };
+
+    const logger = new Logger({
+      optionsByLevel: {
+        warn: [],
+        info: [],
+        debug: [],
+        error: [],
+        fatal: [],
+        all: [],
+        raw: [
+          mockOptions,
+        ],
+      },
+      singleton: false,
+      transports: {
+        mock: MockTransport,
+      },
+    });
+
+    expect(Object.keys(logger._timers).length).toBe(0);
+
+    logger.time('test');
+
+    expect(Object.keys(logger._timers).length).toBe(1);
+
+    await sleep(60); // seems setTimeout is not precise enough, lol
+
+    let result = await logger.timeEnd('test');
+
+    expect(result).toBeGreaterThan(50);
+    expect(Object.keys(logger._timers).length).toBe(0);
+    expect(timeMessages.length).toBe(1);
+    expect((/test: .+ ms/).test(timeMessages[0])).toBe(true);
+
+    expect(await logger.timeEnd('test')).toBe(-1);
+
+    logger.time('test1');
+    logger.time('test2');
+    logger.time('test3');
+    logger.time('test4');
+
+    expect(Object.keys(logger._timers).length).toBe(4);
+
+    await sleep(60); // seems setTimeout is not precise enough, lol
+
+    result = await logger.timeEnd('test1');
+
+    expect(result).toBeGreaterThan(50);
+
+    expect(await logger.timeEnd('test2')).toBeGreaterThan(result);
+    expect(await logger.timeEnd('test3')).toBeGreaterThan(result);
+
+    expect((/test1: .+ ms/).test(timeMessages[1])).toBe(true);
+    expect((/test2: .+ ms/).test(timeMessages[2])).toBe(true);
+    expect((/test3: .+ ms/).test(timeMessages[3])).toBe(true);
+
+    expect(Object.keys(logger._timers).length).toBe(1);
+
+    logger.cleanupTimers();
+
+    expect(Object.keys(logger._timers).length).toBe(0);
+    expect(await logger.timeEnd('test4')).toBe(-1);
+  });
+
+  afterAll(async () => { await sleep(100); });
 });
