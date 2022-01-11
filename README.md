@@ -462,6 +462,35 @@ We have the following officially supported transports:
 - [Email]() (Coming soon)
 - [SMS]() (Coming soon)
 
+## Time functions to measure performance
+
+We have implemented functions similar to `console.time()` and `console.timeEnd()` to measure performance:
+
+```ts
+const logger = new Logger({});
+
+logger.time('my-timed-operation');
+
+// do things
+
+const result: number = await logger.timeEnd('my-timed-operation');
+
+// transport output:
+//
+//   my-timed-operation: 123.456 ms
+//
+
+console.log(result);
+
+// 123.456
+```
+
+Three important differences from the console functions to note:
+
+- `logger.timeEnd` is async as it logs to the transports through the `.raw()` method
+- `logger.timeEnd` will return a number representing the elapsed time in milliseconds, which is useful for being able to store the value for usage in measuring performance through code
+- we used `performance.timeOrigin + performance.now()` instead of `Date.now()` to get the current time in high resolution milliseconds, due to this fact the time measurements are more accurate than some internal time-based functions (e.g. from experience we've seen code like `setTimeout(() => {}, 100)` might be measured to take `99.83 ms` which can break a test if you expect something like `await logger.timeEnd('...') > 100`)
+
 ## Contributing
 
 Yes, thank you! This plugin is community-driven, most of its features are from different authors.
