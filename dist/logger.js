@@ -684,7 +684,7 @@ var Logger = (() => {
   });
 
   // package.json
-  var version = "2.0.0";
+  var version = "2.1.0";
 
   // src/interfaces.ts
   var LogLevelsEnum;
@@ -1167,6 +1167,9 @@ var Logger = (() => {
       return await this.broadcast(message, LogLevels2.FATAL);
     }
     async all(...message) {
+      return await this.broadcast(message, LogLevels2.ALL);
+    }
+    async log(...message) {
       return await this.broadcast(message, LogLevels2.ALL);
     }
     async raw(...message) {

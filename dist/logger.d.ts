@@ -93,6 +93,7 @@ export default class Logger {
     error(...message: unknown[]): Promise<LoggerTransportResult[]>;
     fatal(...message: unknown[]): Promise<LoggerTransportResult[]>;
     all(...message: unknown[]): Promise<LoggerTransportResult[]>;
+    log(...message: unknown[]): Promise<LoggerTransportResult[]>;
     raw(...message: unknown[]): Promise<LoggerTransportResult[]>;
     channel(channelName: string): LoggerBroadcastFns;
     broadcast(message: unknown[], level: LogLevelsEnum, channelName?: string): Promise<LoggerTransportResult[]>;
