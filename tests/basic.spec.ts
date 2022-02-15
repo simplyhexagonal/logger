@@ -148,7 +148,12 @@ describe('logger', () => {
       singleton: false,
     });
 
-    const result = await logger.all('Hello logger', 3, 'app', { simply: 'hexagonal' });
+    let result = await logger.all('Hello logger', 3, 'app', { simply: 'hexagonal' });
+
+    expect(result.length).toBe(1);
+    expect(result[0].channelName).toBe(LoggerTransportName.CONSOLE);
+
+    result = await logger.log('Hello logger', 3.5, 'app', { simply: 'hexagonal' });
 
     expect(result.length).toBe(1);
     expect(result[0].channelName).toBe(LoggerTransportName.CONSOLE);

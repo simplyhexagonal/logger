@@ -290,6 +290,12 @@ export default class Logger {
     return await this.broadcast(message, LogLevels.ALL);
   }
 
+  // Convenience alias to make it easier to use the logger
+  // as drop-in replacement for console.log
+  async log(...message: unknown[]) {
+    return await this.broadcast(message, LogLevels.ALL);
+  }
+
   async raw(...message: unknown[]) {
     return await this.broadcast(message, LogLevels.RAW);
   }
