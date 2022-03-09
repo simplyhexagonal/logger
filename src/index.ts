@@ -114,6 +114,8 @@ export default class Logger {
     return performanceShim.timeOrigin + performanceShim.now();
   }
 
+  static default: typeof Logger = Logger;
+
   _timers: {[k: string]: number} = {};
 
   optionsByLevel: LoggerTransportOptionsByLevel;
