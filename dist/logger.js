@@ -684,7 +684,7 @@ var Logger = (() => {
   });
 
   // package.json
-  var version = "2.1.0";
+  var version = "2.1.1";
 
   // src/interfaces.ts
   var LogLevelsEnum;
@@ -1238,6 +1238,7 @@ var Logger = (() => {
   Logger.LoggerTransportName = LoggerTransportName;
   Logger.LogLevels = LogLevels2;
   Logger.LoggerTransport = LoggerTransport;
+  Logger.default = _Logger;
   return src_exports;
 })();
 //# sourceMappingURL=logger.js.map

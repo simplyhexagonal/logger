@@ -73,6 +73,7 @@ export default class Logger {
     };
     static LoggerTransport: typeof LoggerTransport;
     static hrTime(): number;
+    static default: typeof Logger;
     _timers: {
         [k: string]: number;
     };
